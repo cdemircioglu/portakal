@@ -1,0 +1,2 @@
+git -C ~/portakal/ fetch origin 
+git -C ~/portakal/ merge origin/master 
