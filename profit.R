@@ -13,7 +13,9 @@ myperiod <- c(5,10)
 time_window <- 89
 
 #Result set
-expected_benefit <<- data.frame(stockticker=character(), sd=numeric(),period=numeric(),sell_mean_profit=numeric(),buy_mean_profit=numeric(),sell_sd_profit=numeric(),buy_sd_profit=numeric(),sell_low_profit=numeric(),sell_high_profit=numeric(),buy_low_profit=numeric(),buy_high_profit=numeric(),sell_count=numeric(),buy_count=numeric())
+expected_benefit <<- data.frame(stockticker=character(), sd=numeric(),period=numeric(),
+                                sell_suggested_price=numeric(),
+                                buy_suggested_price=numeric(),sell_mean_profit=numeric(),buy_mean_profit=numeric(),sell_sd_profit=numeric(),buy_sd_profit=numeric(),sell_low_profit=numeric(),sell_high_profit=numeric(),buy_low_profit=numeric(),buy_high_profit=numeric(),sell_count=numeric(),buy_count=numeric())
 
 futures <- function(time_window,standarddeviation,stockdata,period)
 {
@@ -132,7 +134,14 @@ for(stockticker in stocktickervector)
   mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
   rs = dbSendQuery(mydb, paste("SELECT F.OPEN, F.LAST AS CLOSE, F.LOW AS DAYLOW, F.HIGH AS DAYHIGH, F.SNAPSHOTDATE, S.SETTLE, (SELECT P.LAST FROM futures P WHERE F.FUTURE = P.FUTURE AND F.SNAPSHOTDATE > P.SNAPSHOTDATE ORDER BY P.SNAPSHOTDATE DESC LIMIT 1) AS PCLOSE FROM futures F INNER JOIN futuresspot S ON F.FUTURE = S.FUTURE WHERE F.FUTURE = '",stockticker,"' ORDER BY F.SNAPSHOTDATE DESC",sep=""))
   stockdata = fetch(rs, n=-1)
+
+  rs = dbSendQuery(mydb,paste("SELECT F.OPEN, F.LAST AS CLOSE, F.LOW AS DAYLOW, F.HIGH AS DAYHIGH, F.SNAPSHOTDATE, S.SETTLE, (SELECT P.LAST FROM futures P WHERE F.FUTURE = P.FUTURE AND F.SNAPSHOTDATE > P.SNAPSHOTDATE ORDER BY P.SNAPSHOTDATE DESC LIMIT 1) AS PCLOSE FROM futures F INNER JOIN futuresspot S ON F.FUTURE = S.FUTURE WHERE F.FUTURE = '",stockticker,"' ORDER BY F.SNAPSHOTDATE DESC LIMIT 1;",sep=""))
+  stockconvert = fetch(rs, n=-1)
   
+  #Conversion factor between continuos future data and current data based on close of current vs close of continous.
+  conversionfactor <- stockconvert[1,6]/stockconvert[1,2]
+  print(conversionfactor)
+    
   #Close the database
   dbDisconnect((mydb))
   
@@ -216,8 +225,17 @@ for(stockticker in stocktickervector)
       buy_low_profit <- round(signif((buy_mean_profit-buy_sd_profit)*100,digits=3),digits=3)
       buy_high_profit <- signif((buy_mean_profit+buy_sd_profit)*100,digits=3)
       
+      #Find the suggested sell price
+      sell_suggested_price <- result[1,11]*(1-sell_mean_profit)*conversionfactor
+      buy_suggested_price <- result[1,10]*(1+buy_mean_profit)*conversionfactor
+      
+      
       #Result set
-      expected_benefit <<- rbind(expected_benefit,data.frame(stockticker,sd,period,sell_mean_profit,buy_mean_profit,sell_sd_profit,buy_sd_profit,sell_low_profit,sell_high_profit,buy_low_profit,buy_high_profit,sell_count,buy_count))
+      expected_benefit <<- rbind(expected_benefit,data.frame(stockticker,sd,period,
+                                                             sell_suggested_price,
+                                                             buy_suggested_price,
+                                                             sell_mean_profit,buy_mean_profit,sell_sd_profit,buy_sd_profit,sell_low_profit,sell_high_profit,buy_low_profit,buy_high_profit,sell_count,buy_count))
+      
       
       #Write the debug file to csv
       #write.csv(result, file = paste("CLsd",sd,"period",period,".csv",sep=""), row.names = TRUE)
@@ -230,5 +248,5 @@ for(stockticker in stocktickervector)
 expected_benefit <- expected_benefit[!(expected_benefit$sell_count==0 & expected_benefit$buy_count==0),]
 
 #Print out the data set
-finaldt <- as.data.table(expected_benefit[,c(1:3,8:13)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,2,2,2,2,0,0)), type='html', file="emailcontent_profit.html")
+finaldt <- as.data.table(expected_benefit[,c(1:5,8:13)])
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,2,2,2,2,2,2,0,0)), type='html', file="emailcontent_profit.html")

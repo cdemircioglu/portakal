@@ -1,0 +1,13 @@
+ZB,CME_US1,interest-rates/us-treasury/30-year-us-treasury-bond.html,2
+ES,CME_SP2,equity-index/us-index/e-mini-sandp500.html,2
+6A,CME_AD2,fx/g10/australian-dollar.html,4
+6J,CME_JY2,fx/g10/japanese-yen.html,6
+NG,CME_NG12,energy/natural-gas/natural-gas.html,3
+6B,CME_BP2,fx/g10/british-pound.html,4
+CL,CME_CL2,energy/crude-oil/light-sweet-crude.html,2
+6E,CME_EC1,fx/g10/euro-fx.html,4
+GC,CME_GC1,metals/precious/gold.html,1
+SI,CME_SI1,metals/precious/silver.html,3
+YM,CME_YM1,equity-index/us-index/e-mini-dow.html,2
+NQ,CME_NQ1,equity-index/us-index/e-mini-nasdaq-100.html,2
+SB,ICE_SB1,SB1:COM,2
