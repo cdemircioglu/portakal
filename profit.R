@@ -140,7 +140,6 @@ for(stockticker in stocktickervector)
   
   #Conversion factor between continuos future data and current data based on close of current vs close of continous.
   conversionfactor <- stockconvert[1,6]/stockconvert[1,2]
-  print(conversionfactor)
     
   #Close the database
   dbDisconnect((mydb))
@@ -249,4 +248,4 @@ expected_benefit <- expected_benefit[!(expected_benefit$sell_count==0 & expected
 
 #Print out the data set
 finaldt <- as.data.table(expected_benefit[,c(1:5,8:13)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,2,2,2,2,2,2,0,0)), type='html', file="emailcontent_profit.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,4,4,2,2,2,2,0,0)), type='html', file="emailcontent_profit.html")
