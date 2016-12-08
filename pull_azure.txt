@@ -1,0 +1,15 @@
+#!/bin/bash
+# A simple Azure storage example
+
+export AZURE_STORAGE_ACCOUNT=gakguk
+export AZURE_STORAGE_ACCESS_KEY=pb4ole+R5XjXyOU9hlOMISPeXBJFmgUg9Gdwqr461cQ6wDOCtiGQRUtZkvaQUlTSta7ydxJF6unyzUJnAbU1PQ==
+
+export container_name=stock
+export blob_name=futures.txt
+
+echo "Uploading the file..."
+rm -f futures*.txt
+azure storage blob download  $container_name futures.txt .
+azure storage blob download  $container_name futures_ice.txt .
+rm -f futures.csv
+cat futures*.txt >> futures.csv
