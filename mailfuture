@@ -1,4 +1,5 @@
-./pull_azure.sh
+#!/bin/bash
+sh ./pull_azure.sh
 
 Rscript /home/cem/portakal/future.R
 Rscript /home/cem/portakal/profit.R
