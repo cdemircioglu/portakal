@@ -247,5 +247,6 @@ for(stockticker in stocktickervector)
 expected_benefit <- expected_benefit[!(expected_benefit$sell_count==0 & expected_benefit$buy_count==0),]
 
 #Print out the data set
-finaldt <- as.data.table(expected_benefit[,c(1:5,8:13)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,4,4,2,2,2,2,0,0)), type='html', file="emailcontent_profit.html")
+#finaldt <- as.data.table(expected_benefit[,c(1:5,8:13)])
+finaldt <- as.data.table(expected_benefit[,c(1:5)])
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,4,4)), type='html', file="emailcontent_profit.html")
