@@ -6,10 +6,10 @@ myhost <- "cemoptions.cloudapp.net"
 options(stringsAsFactors = FALSE)
 
 futuresblob <- read.csv("futures.csv", header=FALSE)  # read csv file 
-#stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
 stocktickervector <- sort(as.vector(futuresblob[,1]))
-#stocktickervector <- sort(c("CL"))
-myperiod <- c(5,10)
+#stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
+#stocktickervector <- sort(c("6E"))
+myperiod <- c(1,5,10)
 time_window <- 89
 
 #Result set
@@ -247,6 +247,6 @@ for(stockticker in stocktickervector)
 expected_benefit <- expected_benefit[!(expected_benefit$sell_count==0 & expected_benefit$buy_count==0),]
 
 #Print out the data set
-#finaldt <- as.data.table(expected_benefit[,c(1:5,8:13)])
-finaldt <- as.data.table(expected_benefit[,c(1:5)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,4,4)), type='html', file="emailcontent_profit.html")
+finaldt <- as.data.table(expected_benefit[,c(1:5,8:15)])
+#finaldt <- as.data.table(expected_benefit[,c(1:5)])
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,4,4,2,2,2,2,2,2,0,0)), type='html', file="emailcontent_profit.html")
