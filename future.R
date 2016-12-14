@@ -108,9 +108,16 @@ futures <- function(time_window,standarddeviation,stockdata,period)
 
 #Parameters
 time_window <- 89
-futuresblob <- read.csv("futures.csv", header=FALSE)  # read csv file 
-#stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-stocktickervector <- sort(as.vector(futuresblob[,1]))
+
+#Check if the file exists, it not use a constant. 
+if(file.exists("futures.csv"))
+{
+  futuresblob <- read.csv("futures.csv", header=FALSE)  # read csv file 
+  stocktickervector <- sort(as.vector(futuresblob[,1]))
+} else
+{
+  stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
+}
 
 myperiod <- c(1,5,10)
 
@@ -118,6 +125,7 @@ myperiod <- c(1,5,10)
 
 for(stockticker in stocktickervector)
 {
+  print(stockticker)
   #Connection settings and the dataset
   mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
   rs = dbSendQuery(mydb, paste("SELECT F.OPEN, F.LAST AS CLOSE, F.LOW AS DAYLOW, F.HIGH AS DAYHIGH, F.SNAPSHOTDATE, S.SETTLE, (SELECT P.LAST FROM futures P WHERE F.FUTURE = P.FUTURE AND F.SNAPSHOTDATE > P.SNAPSHOTDATE ORDER BY P.SNAPSHOTDATE DESC LIMIT 1) AS PCLOSE FROM futures F INNER JOIN futuresspot S ON F.FUTURE = S.FUTURE WHERE F.FUTURE = '",stockticker,"' ORDER BY F.SNAPSHOTDATE DESC",sep=""))
