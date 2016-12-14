@@ -1,23 +1,23 @@
 #Get the library 
-library("DBI")
 library("dplyr")
-library("methods")
-library("data.table")
 library("XML")
 library("RMySQL")
-library("ggplot2")
 
 #Read csv file
-blob <- read.csv("c:\\temp\\CHRIS-CME_NG11.csv", header=TRUE)  
+#blob <- read.csv("c:\\temp\\CHRIS-CME_NG11.csv", header=TRUE)  
 
 #Set the ticker
 stockticker <- "NG"
 
 #Connection settings and the dataset
-mydb <- dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+mydb <- dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host='cemoptions.cloudapp.net')
 rs <- dbSendQuery(mydb, paste("SELECT F.SNAPSHOTDATE AS 'Date', F.OPEN AS 'Open', F.High, F.Low, F.LAST AS 'Last', F.CHANGE AS 'Change', F.Settle FROM futures F WHERE F.Future = '",stockticker,"' ORDER BY F.SNAPSHOTDATE DESC",sep=""))
 blob <- fetch(rs, n=-1)
 
+#Close the database
+dbDisconnect((mydb))
+
+#Set the dates
 blob$Date <- as.POSIXct(blob$Date)
 
 #Group them based on their dates, 1st of month
@@ -42,9 +42,12 @@ mdata <- data.frame(
 #Loop on lines
 for(i in 1:length(nline))
 {
-    mdata <- rbind(mdata, data.frame(SnapshotDate = blob[nline[i],1],
-             Open = blob[nline[i],2],
-             PSettle = if(i==1) blob[nline[i],2] else blob[nline[i-1],7] )
+    mdata <- rbind(mdata, 
+                data.frame(
+                  SnapshotDate = blob[nline[i],1],
+                  Open = blob[nline[i],2],
+                  PSettle = if(i==1) blob[nline[i],2] else blob[nline[i-1],7] 
+                )
   )
 }
 
