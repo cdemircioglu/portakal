@@ -15,4 +15,4 @@ azure storage blob download  $container_name futures_pair.txt .
 rm -f futures.csv
 sed -e '$a\' futures.txt > futures_aaa.txt
 rm futures.txt 
-cat futures.txt futures_ice.txt >> futures.csv
+cat futures_aaa.txt futures_ice.txt >> futures.csv
