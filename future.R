@@ -208,6 +208,16 @@ for (i in 1:nrow(resulttable) ) {
 #Close the database
 dbDisconnect((mydb))
 
+#Update for 6J
+resulttable$CLOSE[resulttable$FUTURE == '6J'] <- resulttable$CLOSE[resulttable$FUTURE == '6J']*100
+resulttable$BUY[resulttable$FUTURE == '6J'] <- resulttable$BUY[resulttable$FUTURE == '6J']*100
+resulttable$SELL[resulttable$FUTURE == '6J'] <- resulttable$SELL[resulttable$FUTURE == '6J']*100
+resulttable$BUY1[resulttable$FUTURE == '6J'] <- resulttable$BUY1[resulttable$FUTURE == '6J']*100
+resulttable$SELL1[resulttable$FUTURE == '6J'] <- resulttable$SELL1[resulttable$FUTURE == '6J']*100
+resulttable$BUY2[resulttable$FUTURE == '6J'] <- resulttable$BUY2[resulttable$FUTURE == '6J']*100
+resulttable$SELL2[resulttable$FUTURE == '6J'] <- resulttable$SELL2[resulttable$FUTURE == '6J']*100
+
+
 #Create a table
 finaldt <- as.data.table(resulttable)
 print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="emailcontent.html")
