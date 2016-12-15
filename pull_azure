@@ -11,6 +11,7 @@ echo "Uploading the file..."
 rm -f futures*.txt
 azure storage blob download  $container_name futures.txt .
 azure storage blob download  $container_name futures_ice.txt .
+azure storage blob download  $container_name futures_pair.txt .
 rm -f futures.csv
 sed -e '$a\' futures.txt > futures_aaa.txt
 rm futures.txt 
