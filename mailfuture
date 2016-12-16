@@ -1,6 +1,8 @@
 #!/bin/bash
 sh ./pull_azure
 
+rm -f /home/cem/email*.html
+
 Rscript /home/cem/portakal/future.R
 Rscript /home/cem/portakal/future_pair.R
 Rscript /home/cem/portakal/profit.R
