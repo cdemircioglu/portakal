@@ -5,7 +5,7 @@ library(data.table)
 myhost <- "cemoptions.cloudapp.net"
 options(stringsAsFactors = FALSE)
 
-futuresblob <- read.csv("futures.csv", header=FALSE)  # read csv file 
+futuresblob <- read.csv("/home/cem/portakal/futures.csv", header=FALSE)  # read csv file 
 stocktickervector <- sort(as.vector(futuresblob[,1]))
 #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
 #stocktickervector <- sort(c("6E"))
@@ -249,4 +249,4 @@ expected_benefit <- expected_benefit[!(expected_benefit$sell_count==0 & expected
 #Print out the data set
 finaldt <- as.data.table(expected_benefit[,c(1:5,8:15)])
 #finaldt <- as.data.table(expected_benefit[,c(1:5)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,4,4,2,2,2,2,2,2,0,0)), type='html', file="emailcontent_profit.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0,4,4,2,2,2,2,2,2,0,0)), type='html', file="/home/cem/emailcontent_profit.html")
