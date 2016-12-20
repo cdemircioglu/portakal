@@ -110,9 +110,9 @@ futures <- function(time_window,standarddeviation,stockdata,period)
 time_window <- 89
 
 #Check if the file exists, it not use a constant. 
-if(file.exists("futures.csv"))
+if(file.exists("/home/cem/portakal/futures.csv"))
 {
-  futuresblob <- read.csv("futures.csv", header=FALSE)  # read csv file 
+  futuresblob <- read.csv("/home/cem/portakal/futures.csv", header=FALSE)  # read csv file 
   stocktickervector <- sort(as.vector(futuresblob[,1]))
 } else
 {
@@ -220,4 +220,4 @@ resulttable$SELL2[resulttable$FUTURE == '6J'] <- resulttable$SELL2[resulttable$F
 
 #Create a table
 finaldt <- as.data.table(resulttable)
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="emailcontent.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
