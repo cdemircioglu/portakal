@@ -15,9 +15,9 @@ time_window <- 89
 myperiod <- c(1,5,10)
 
 #Check if the file exists, it not use a constant. 
-if(file.exists("futures_pair.txt"))
+if(file.exists("/home/cem/portakal/futures_pair.txt"))
 {
-  futuresblob <- read.csv("futures_pair.txt", header=FALSE)  # read csv file 
+  futuresblob <- read.csv("/home/cem/portakal/futures_pair.txt", header=FALSE)  # read csv file 
 } else
 {
   V0 <- as.vector(unlist(strsplit("ESZB,ES|ZB,ES+10*ZB,1ES|1ZB,CME|CME,2",",",fixed=TRUE)))
@@ -240,4 +240,4 @@ dbDisconnect((mydb))
 
 #Create a table
 finaldt <- as.data.table(resulttable)
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="emailcontent_pair.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent_pair.html")
