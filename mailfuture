@@ -2,12 +2,13 @@
 sh ./pull_azure
 
 rm -f /home/cem/email*.html
+rm -f /home/cem/final.html
 rm -f /home/cem/portakal/email*.html
+rm -f /home/cem/portakal/final.html
 
 Rscript /home/cem/portakal/future.R
 Rscript /home/cem/portakal/future_pair.R
 Rscript /home/cem/portakal/profit.R
 
-rm -f /home/cem/portakal/final.html
 cat /home/cem/*.html >> /home/cem/final.html
 mutt -e "set content_type=text/html" cemd@abacusdms.com cdemircioglu@gmail.com hasan.arslan@gmail.com -s "subject" < /home/cem/final.html
