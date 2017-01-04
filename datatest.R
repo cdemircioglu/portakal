@@ -4,7 +4,7 @@ library(data.table)
 
 #Connection string
 mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host="cemoptions.cloudapp.net")
-rs = dbSendQuery(mydb, "SELECT FUTURE,MAX(SNAPSHOTDATE) AS SNAPSHOTDATE FROM futures WHERE VOLUME IS NOT NULL GROUP BY FUTURE;")
+rs = dbSendQuery(mydb, "SELECT FUTURE,MAX(CASE WHEN VOLUME IS NULL THEN '2015-01-01' ELSE SNAPSHOTDATE END) AS SNAPSHOTDATECONTINUOUS, MAX(SNAPSHOTDATE) AS SNAPSHOTDATECURRENT FROM futures GROUP BY FUTURE;")
 stockdata = fetch(rs, n=-1)
                              
 #Disconnect from the database
