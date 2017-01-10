@@ -4,6 +4,7 @@ library(xtable)
 library(data.table)
 library(reshape)
 library(ggplot2)
+library(TTR)
 options(warn=-1)
 myhost <- "cemoptions.cloudapp.net"
 options(stringsAsFactors = FALSE)
@@ -117,6 +118,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 } else
 {
   stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
+  #stocktickervector <- sort(c("NG"))
 }
 
 myperiod <- c(1,5,10)
@@ -156,6 +158,7 @@ for(stockticker in stocktickervector)
   result$future <- stockticker
   result$buy <- result$close*(1-result$mov_mean_long-result$mov_sd_long*result$run_sd)
   result$sell <- result$close*(1+result$mov_mean_short+result$mov_sd_short*result$run_sd)
+  result$rsi <- format(round(rev(RSI(rev(stockdata$CLOSE), n=89))[1], 1), nsmall = 1)
   
   #Create the final results table
   if(!exists("finalresulttable"))
@@ -172,16 +175,19 @@ for(stockticker in stocktickervector)
   
 }
 
+
+
+
 #Result table
 resulttable <- finalresulttable[finalresulttable$run_sd == 0,c(9,8,6,10:11)]
 resulttable$buy1 <- finalresulttable[finalresulttable$run_sd == 1,10]
 resulttable$sell1 <- finalresulttable[finalresulttable$run_sd == 1,11]
 resulttable$buy2 <- finalresulttable[finalresulttable$run_sd == 2,10]
 resulttable$sell2 <- finalresulttable[finalresulttable$run_sd == 2,11]
+resulttable$rsi <- finalresulttable[finalresulttable$run_sd == 2,12]
 
 #Rename the columns
-names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2")
-
+names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2","RSI")
 
 #Connection settings and the dataset
 mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
@@ -220,4 +226,4 @@ resulttable$SELL2[resulttable$FUTURE == '6J'] <- resulttable$SELL2[resulttable$F
 
 #Create a table
 finaldt <- as.data.table(resulttable)
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4,2)), type='html', file="/home/cem/emailcontent.html")
