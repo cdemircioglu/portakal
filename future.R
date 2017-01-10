@@ -158,7 +158,7 @@ for(stockticker in stocktickervector)
   result$future <- stockticker
   result$buy <- result$close*(1-result$mov_mean_long-result$mov_sd_long*result$run_sd)
   result$sell <- result$close*(1+result$mov_mean_short+result$mov_sd_short*result$run_sd)
-  result$rsi <- format(round(rev(RSI(rev(stockdata$CLOSE), n=14))[1], 1), nsmall = 1)
+  result$rsi <- format(round(rev(RSI(rev(stockdata$CLOSE), n=14))[1], 0), nsmall = 0)
   
   #Create the final results table
   if(!exists("finalresulttable"))
