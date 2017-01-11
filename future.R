@@ -138,7 +138,7 @@ for(stockticker in stocktickervector)
   print(stockticker)
   #Connection settings and the dataset
   mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
-  rs = dbSendQuery(mydb, paste("SELECT F.OPEN, F.LAST AS CLOSE, F.LOW AS DAYLOW, F.HIGH AS DAYHIGH, F.SNAPSHOTDATE, S.SETTLE, (SELECT P.LAST FROM futures P WHERE F.FUTURE = P.FUTURE AND F.SNAPSHOTDATE > P.SNAPSHOTDATE ORDER BY P.SNAPSHOTDATE DESC LIMIT 1) AS PCLOSE FROM futures F INNER JOIN futuresspot S ON F.FUTURE = S.FUTURE WHERE F.FUTURE = '",stockticker,"' ORDER BY F.SNAPSHOTDATE DESC",sep=""))
+  rs = dbSendQuery(mydb, paste("SELECT F.OPEN, F.LAST AS CLOSE, F.LOW AS DAYLOW, F.HIGH AS DAYHIGH, F.SNAPSHOTDATE, S.SETTLE, (SELECT P.LAST FROM futures P WHERE F.FUTURE = P.FUTURE AND F.SNAPSHOTDATE > P.SNAPSHOTDATE ORDER BY P.SNAPSHOTDATE DESC LIMIT 1) AS PCLOSE, F.VOLUME FROM futures F INNER JOIN futuresspot S ON F.FUTURE = S.FUTURE WHERE F.FUTURE = '",stockticker,"' ORDER BY F.SNAPSHOTDATE DESC",sep=""))
   stockdata = fetch(rs, n=-1)
   
   #Result set
@@ -174,7 +174,10 @@ for(stockticker in stocktickervector)
     result$buyrsi[i] <- format(round(rev(RSI(rev(c(result$buy[i]/conversionfactor,stockdata$CLOSE)), n=14))[1], 0), nsmall = 0)
     result$sellrsi[i] <- format(round(rev(RSI(rev(c(result$sell[i]/conversionfactor,stockdata$CLOSE)), n=14))[1], 0), nsmall = 0)
   }
-  
+
+  #Add the mfi calculation
+  result$mfi <- format(round(rev(RSI(rev(stockdata$VOLUME[!is.na(stockdata$VOLUME)]), n=14))[1], 0), nsmall = 0)
+    
   #Create the final results table
   if(!exists("finalresulttable"))
   {
@@ -192,7 +195,6 @@ for(stockticker in stocktickervector)
 
 
 
-
 #Result table
 resulttable <- finalresulttable[finalresulttable$run_sd == 0,c(9,8,6,10:11)]
 resulttable$buy1 <- finalresulttable[finalresulttable$run_sd == 1,10]
@@ -201,13 +203,16 @@ resulttable$buy2 <- finalresulttable[finalresulttable$run_sd == 2,10]
 resulttable$sell2 <- finalresulttable[finalresulttable$run_sd == 2,11]
 resulttable$rsi <- finalresulttable[finalresulttable$run_sd == 2,12]
 
+
 resulttable$buy1rsi <- finalresulttable[finalresulttable$run_sd == 1,13]
 resulttable$buy2rsi <- finalresulttable[finalresulttable$run_sd == 2,13]
 resulttable$sell1rsi <- finalresulttable[finalresulttable$run_sd == 1,14]
 resulttable$sell2rsi <- finalresulttable[finalresulttable$run_sd == 2,14]
 
+resulttable$mfi <- finalresulttable[finalresulttable$run_sd == 2,15]
+
 #Rename the columns
-names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2","RSI","BUY1RSI","BUY2RSI","SELL1RSI","SELL2RSI")
+names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2","RSI","BUY1RSI","BUY2RSI","SELL1RSI","SELL2RSI","MFI")
 
 #Connection settings and the dataset
 mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
@@ -266,5 +271,5 @@ for (i in 1:nrow(resulttable) ) {
 resulttable$SNAPSHOTDATE <- as.character(Sys.Date())
 
 #Create a table
-finaldt <- as.data.table(resulttable[,c(1:10,15)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4,2)), type='html', file="/home/cem/emailcontent.html")
+finaldt <- as.data.table(resulttable[,c(1:3,6,8,7,9,10,15,16)])
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,2)), type='html', file="/home/cem/emailcontent.html")
