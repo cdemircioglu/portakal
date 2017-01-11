@@ -12,4 +12,4 @@ dbDisconnect(mydb)
 
 #Print out the data set
 finaldt <- as.data.table(stockdata)
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0)), type='html', file="/home/cem/emailcontent_data.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,0,0,0)), type='html', file="/home/cem/emailcontent_testdata.html")
