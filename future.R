@@ -262,6 +262,9 @@ for (i in 1:nrow(resulttable) ) {
   resulttable$SELL2[i] <- paste(resulttable$SELL2[i]," (", resulttable$SELL2RSI[i],") ",sep="")
 }
 
+#Add the date column to the final result table
+resulttable$SNAPSHOTDATE <- as.character(Sys.Date())
+
 #Create a table
-finaldt <- as.data.table(resulttable[,1:10])
+finaldt <- as.data.table(resulttable[,c(1:10,15)])
 print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4,2)), type='html', file="/home/cem/emailcontent.html")
