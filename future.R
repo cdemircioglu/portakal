@@ -10,6 +10,14 @@ myhost <- "cemoptions.cloudapp.net"
 options(stringsAsFactors = FALSE)
 
 
+DecimalPlaces <- function(x) {
+  if ((x %% 1) != 0) {
+    nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed=TRUE)[[1]][[2]])
+  } else {
+    return(0)
+  }
+}
+
 ConvertZB32 <- function(price)
 {
   wholenumber <- floor(price)
@@ -159,6 +167,13 @@ for(stockticker in stocktickervector)
   result$buy <- result$close*(1-result$mov_mean_long-result$mov_sd_long*result$run_sd)
   result$sell <- result$close*(1+result$mov_mean_short+result$mov_sd_short*result$run_sd)
   result$rsi <- format(round(rev(RSI(rev(stockdata$CLOSE), n=14))[1], 0), nsmall = 0)
+
+  #Loop on result for RSI calculation
+  for(i in 1:nrow(result)) {
+    #Calculate buy rsi, take buy, convert the actual to continuos, add to close)
+    result$buyrsi[i] <- format(round(rev(RSI(rev(c(result$buy[i]/conversionfactor,stockdata$CLOSE)), n=14))[1], 0), nsmall = 0)
+    result$sellrsi[i] <- format(round(rev(RSI(rev(c(result$sell[i]/conversionfactor,stockdata$CLOSE)), n=14))[1], 0), nsmall = 0)
+  }
   
   #Create the final results table
   if(!exists("finalresulttable"))
@@ -186,8 +201,13 @@ resulttable$buy2 <- finalresulttable[finalresulttable$run_sd == 2,10]
 resulttable$sell2 <- finalresulttable[finalresulttable$run_sd == 2,11]
 resulttable$rsi <- finalresulttable[finalresulttable$run_sd == 2,12]
 
+resulttable$buy1rsi <- finalresulttable[finalresulttable$run_sd == 1,13]
+resulttable$buy2rsi <- finalresulttable[finalresulttable$run_sd == 2,13]
+resulttable$sell1rsi <- finalresulttable[finalresulttable$run_sd == 1,14]
+resulttable$sell2rsi <- finalresulttable[finalresulttable$run_sd == 2,14]
+
 #Rename the columns
-names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2","RSI")
+names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2","RSI","BUY1RSI","BUY2RSI","SELL1RSI","SELL2RSI")
 
 #Connection settings and the dataset
 mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
@@ -223,7 +243,25 @@ resulttable$SELL1[resulttable$FUTURE == '6J'] <- resulttable$SELL1[resulttable$F
 resulttable$BUY2[resulttable$FUTURE == '6J'] <- resulttable$BUY2[resulttable$FUTURE == '6J']*100
 resulttable$SELL2[resulttable$FUTURE == '6J'] <- resulttable$SELL2[resulttable$FUTURE == '6J']*100
 
+#Find the significant figures
+for (i in 1:nrow(resulttable) ) {
+  dec <- DecimalPlaces(resulttable$CLOSE[i])
+  resulttable$BUY[i] <- format(round(as.numeric(resulttable$BUY[i]), dec), nsmall = dec)
+  resulttable$SELL[i] <- format(round(as.numeric(resulttable$SELL[i]), dec), nsmall = dec)  
+  resulttable$BUY1[i] <- format(round(as.numeric(resulttable$BUY1[i]), dec), nsmall = dec)
+  resulttable$SELL1[i] <- format(round(as.numeric(resulttable$SELL1[i]), dec), nsmall = dec)  
+  resulttable$BUY2[i] <- format(round(as.numeric(resulttable$BUY2[i]), dec), nsmall = dec)
+  resulttable$SELL2[i] <- format(round(as.numeric(resulttable$SELL2[i]), dec), nsmall = dec)  
+}
+
+#Add the RSI in paranthessis
+for (i in 1:nrow(resulttable) ) {
+  resulttable$BUY1[i] <- paste(resulttable$BUY1[i]," (", resulttable$BUY1RSI[i],") ",sep="")
+  resulttable$BUY2[i] <- paste(resulttable$BUY2[i]," (", resulttable$BUY2RSI[i],") ",sep="")
+  resulttable$SELL1[i] <- paste(resulttable$SELL1[i]," (", resulttable$SELL1RSI[i],") ",sep="")
+  resulttable$SELL2[i] <- paste(resulttable$SELL2[i]," (", resulttable$SELL2RSI[i],") ",sep="")
+}
 
 #Create a table
-finaldt <- as.data.table(resulttable)
+finaldt <- as.data.table(resulttable[,1:10])
 print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4,2)), type='html', file="/home/cem/emailcontent.html")
