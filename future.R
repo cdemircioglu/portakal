@@ -264,4 +264,4 @@ for (i in 1:nrow(resulttable) ) {
 
 #Create a table
 finaldt <- as.data.table(resulttable[,1:10])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4,2)), type='html', file="/home/cem/emailcontent.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
