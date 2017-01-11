@@ -125,8 +125,8 @@ if(file.exists("/home/cem/portakal/futures.csv"))
   stocktickervector <- sort(as.vector(futuresblob[,1]))
 } else
 {
-  stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-  #stocktickervector <- sort(c("NG"))
+  #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
+  stocktickervector <- sort(c("NG"))
 }
 
 myperiod <- c(1,5,10)
@@ -224,14 +224,13 @@ resulttable$SNAPSHOTDATE <- as.character(Sys.Date())
 query <- paste("DELETE FROM futurespredict WHERE SNAPSHOTDATE = '",as.character(Sys.Date()),"'",sep="")
 dbSendQuery(mydb,query)
 
-
 #Loop through the data frame
 for (i in 1:nrow(resulttable) ) {
   
   #dbWriteTable(mydb, value = finalresulttable, name = "futurespredict" , overwrite=FALSE, append = TRUE, row.names = NA )
   val0 <- paste("'",resulttable[i,1],"',",sep="",collapse = '')
   val1 <- noquote(paste(resulttable[i,c(2,4:9)],collapse = ','))
-  query <- paste("INSERT INTO futurespredict VALUES(",noquote(paste(val0,val1,paste(",'",resulttable[i,10],"'",sep="",collapse = ''),",",resulttable[i,3],sep="",collapse = ',')),")",sep="",collapse = ',')
+  query <- paste("INSERT INTO futurespredict VALUES(",noquote(paste(val0,val1,paste(",'",resulttable[i,16],"'",sep="",collapse = ''),",",resulttable[i,3],sep="",collapse = ',')),")",sep="",collapse = ',')
   
   dbSendQuery(mydb,query)
 }
