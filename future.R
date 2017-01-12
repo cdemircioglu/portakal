@@ -229,7 +229,7 @@ for (i in 1:nrow(resulttable) ) {
   
   #dbWriteTable(mydb, value = finalresulttable, name = "futurespredict" , overwrite=FALSE, append = TRUE, row.names = NA )
   val0 <- paste("'",resulttable[i,1],"',",sep="",collapse = '')
-  val1 <- noquote(paste(resulttable[i,c(2,4:9)],collapse = ','))
+  val1 <- noquote(paste(resulttable[1,c(2,4:9,11:14,10,15)],collapse = ','))
   query <- paste("INSERT INTO futurespredict VALUES(",noquote(paste(val0,val1,paste(",'",resulttable[i,16],"'",sep="",collapse = ''),",",resulttable[i,3],sep="",collapse = ',')),")",sep="",collapse = ',')
   
   dbSendQuery(mydb,query)
