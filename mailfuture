@@ -11,5 +11,6 @@ Rscript /home/cem/portakal/future.R
 Rscript /home/cem/portakal/datatest.R
 Rscript /home/cem/portakal/profit.R
 
+subjectline=$(cat /home/cem/importantdates.txt)
 cat /home/cem/*.html >> /home/cem/final.html
-mutt -e "set content_type=text/html" cemd@abacusdms.com cdemircioglu@gmail.com hasan.arslan@gmail.com -s "subject" < /home/cem/final.html
+mutt -e "set content_type=text/html" cemd@abacusdms.com cdemircioglu@gmail.com hasan.arslan@gmail.com -s "$subjectline" < /home/cem/final.html
