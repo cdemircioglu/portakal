@@ -267,6 +267,7 @@ for (i in 1:nrow(resulttable) ) {
   resulttable$SELL1[i] <- format(round(as.numeric(resulttable$SELL1[i]), dec), nsmall = dec)  
   resulttable$BUY2[i] <- format(round(as.numeric(resulttable$BUY2[i]), dec), nsmall = dec)
   resulttable$SELL2[i] <- format(round(as.numeric(resulttable$SELL2[i]), dec), nsmall = dec)  
+  resulttable$MVA[i] <- format(round(as.numeric(resulttable$MVA[i]), dec), nsmall = dec)  
 }
 
 #Add the RSI in paranthessis
@@ -300,5 +301,5 @@ writeLines(paste("OE:",oExpirationDay," TW:",tWitchDay, " SNAPSHOTDATE:", as.cha
 close(fileConn)
 
 #Create a table
-finaldt <- as.data.table(resulttable[,c(1:3,6,8,7,9,10,15)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
+finaldt <- as.data.table(resulttable[,c(1:3,6,8,7,9,10,15,16)])
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
