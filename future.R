@@ -1,3 +1,4 @@
+# This is a test comment
 #Load the library
 library(RMySQL)
 library(xtable)
