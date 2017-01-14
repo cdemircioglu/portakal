@@ -5,6 +5,9 @@ library(data.table)
 library(reshape)
 library(ggplot2)
 library(TTR)
+library(RcppBDT)
+library(zoo)
+
 options(warn=-1)
 myhost <- "cemoptions.cloudapp.net"
 options(stringsAsFactors = FALSE)
@@ -273,6 +276,25 @@ for (i in 1:nrow(resulttable) ) {
 #Add the date column to the final result table
 resulttable$SNAPSHOTDATE <- as.character(Sys.Date())
 
+#Set the current date
+curDate <- Sys.Date()
+
+#Make sure we didn't pass the last thursday
+if(as.numeric(getNthDayOfWeek(third, Fri,as.numeric(format(curDate, format="%m")), as.numeric(format(curDate, format="%Y")))-Sys.Date()) < 0)
+{curDate <- curDate+10}
+
+#Calculate the days to option expiration 
+oExpirationDay <- (as.numeric(getNthDayOfWeek(third, Fri,as.numeric(format(curDate, format="%m")), as.numeric(format(curDate, format="%Y")))-Sys.Date()))
+
+#Last day of quarter
+lastdayofQuarter <- as.Date(as.yearqtr(Sys.Date()),frac=1)
+tWitchDay <- (as.numeric(getLastDayOfWeekInMonth(5, as.numeric(format(lastdayofQuarter, format="%m")), as.numeric(format(lastdayofQuarter, format="%Y")))-Sys.Date()))
+
+#Write to file
+fileConn<-file("/home/cem/importantdates.txt")
+writeLines(paste("OE:",oExpirationDay," TW:",tWitchDay, " SNAPSHOTDATE:", as.character(Sys.Date()) ,  sep=""), fileConn)
+close(fileConn)
+
 #Create a table
-finaldt <- as.data.table(resulttable[,c(1:3,6,8,7,9,10,15,16)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,2)), type='html', file="/home/cem/emailcontent.html")
+finaldt <- as.data.table(resulttable[,c(1:3,6,8,7,9,10,15)])
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
