@@ -129,7 +129,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-  stocktickervector <- sort(c("NG"))
+  stocktickervector <- sort(c("6J"))
 }
 
 myperiod <- c(1,5,10)
@@ -250,7 +250,7 @@ for (i in 1:nrow(resulttable) ) {
 dbDisconnect((mydb))
 
 #Update for 6J
-resulttable$CLOSE[resulttable$FUTURE == '6J'] <- resulttable$CLOSE[resulttable$FUTURE == '6J']*100
+#resulttable$CLOSE[resulttable$FUTURE == '6J'] <- resulttable$CLOSE[resulttable$FUTURE == '6J']*100
 resulttable$BUY[resulttable$FUTURE == '6J'] <- resulttable$BUY[resulttable$FUTURE == '6J']*100
 resulttable$SELL[resulttable$FUTURE == '6J'] <- resulttable$SELL[resulttable$FUTURE == '6J']*100
 resulttable$BUY1[resulttable$FUTURE == '6J'] <- resulttable$BUY1[resulttable$FUTURE == '6J']*100
@@ -269,6 +269,9 @@ for (i in 1:nrow(resulttable) ) {
   resulttable$SELL2[i] <- format(round(as.numeric(resulttable$SELL2[i]), dec), nsmall = dec)  
   resulttable$MVA[i] <- format(round(as.numeric(resulttable$MVA[i]), dec), nsmall = dec)  
 }
+
+#Update for 6J
+resulttable$CLOSE[resulttable$FUTURE == '6J'] <- resulttable$CLOSE[resulttable$FUTURE == '6J']*100
 
 #Add the RSI in paranthessis
 for (i in 1:nrow(resulttable) ) {
