@@ -180,7 +180,10 @@ for(stockticker in stocktickervector)
 
   #Add the mfi calculation
   result$mfi <- format(round(rev(RSI(rev(stockdata$VOLUME[!is.na(stockdata$VOLUME)]), n=14))[1], 0), nsmall = 0)
-    
+  
+  #Add the 200 moving average
+  result$mva <- rollmean(stockdata$CLOSE,200)[1]*conversionfactor
+  
   #Create the final results table
   if(!exists("finalresulttable"))
   {
@@ -213,9 +216,10 @@ resulttable$sell1rsi <- finalresulttable[finalresulttable$run_sd == 1,14]
 resulttable$sell2rsi <- finalresulttable[finalresulttable$run_sd == 2,14]
 
 resulttable$mfi <- finalresulttable[finalresulttable$run_sd == 2,15]
+resulttable$mva <- finalresulttable[finalresulttable$run_sd == 2,16]
 
 #Rename the columns
-names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2","RSI","BUY1RSI","BUY2RSI","SELL1RSI","SELL2RSI","MFI")
+names(resulttable) <- c("FUTURE","CLOSE","PERIOD","BUY","SELL","BUY1","SELL1","BUY2","SELL2","RSI","BUY1RSI","BUY2RSI","SELL1RSI","SELL2RSI","MFI","MVA")
 
 #Connection settings and the dataset
 mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
@@ -233,8 +237,8 @@ for (i in 1:nrow(resulttable) ) {
   #dbWriteTable(mydb, value = finalresulttable, name = "futurespredict" , overwrite=FALSE, append = TRUE, row.names = NA )
   val0 <- paste("'",resulttable[i,1],"',",sep="",collapse = '')
   val1 <- noquote(paste(resulttable[i,c(2,4:9)],collapse = ','))
-  val2 <- noquote(paste(resulttable[i,c(11:14,10,15)],collapse = ','))
-  query <- paste("INSERT INTO futurespredict VALUES(",noquote(paste(val0,val1,paste(",'",resulttable[i,16],"'",sep="",collapse = ''),",",resulttable[i,3],",",val2,sep="",collapse = ',')),")",sep="",collapse = ',')
+  val2 <- noquote(paste(resulttable[i,c(11:14,10,15,16)],collapse = ','))
+  query <- paste("INSERT INTO futurespredict VALUES(",noquote(paste(val0,val1,paste(",'",resulttable$SNAPSHOTDATE[i],"'",sep="",collapse = ''),",",resulttable[i,3],",",val2,sep="",collapse = ',')),")",sep="",collapse = ',')
   
   dbSendQuery(mydb,query)
 }
