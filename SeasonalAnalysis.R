@@ -31,7 +31,7 @@ for(i in 1:nrow(stocktickervector))
   print(stockticker)
   
   #Get the futures
-  myfuture <- Quandl(paste("CHRIS/",stocktickervector[i,2],sep=""), api_key="zK6coAV1K5eyxuaPvWJm")
+  myfuture <- Quandl(paste("CHRIS/",stocktickervector[i,2],sep=""), start_date="2000-12-31", api_key="zK6coAV1K5eyxuaPvWJm")
 
   #Loop on the values pulled  
   for(x in 1:nrow(myfuture)) 
@@ -46,6 +46,7 @@ for(i in 1:nrow(stocktickervector))
   #Close the database
   dbDisconnect((mydb))
 }
+
 
 #Loop on the futures
 for(i in 1:nrow(stocktickervector))
