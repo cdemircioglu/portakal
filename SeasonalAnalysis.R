@@ -9,7 +9,7 @@ myhost <- "cemoptions.cloudapp.net"
 if(file.exists("/home/cem/portakal/futures.csv"))
 {
   futuresblob <- read.csv("/home/cem/portakal/futures.csv", header=FALSE)  # read csv file 
-  stocktickervector <- sort(as.vector(futuresblob[,1]))
+  stocktickervector <- futuresblob[order(futuresblob$V1),c(1,2)]
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
