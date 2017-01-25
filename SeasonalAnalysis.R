@@ -27,6 +27,9 @@ for(i in 1:nrow(stocktickervector))
   #Get the ticker
   stockticker <- stocktickervector[i,1] #Get the symbol
   
+  #Print the ticket
+  print(stockticker)
+  
   #Get the futures
   myfuture <- Quandl(paste("CHRIS/",stocktickervector[i,2],sep=""), api_key="zK6coAV1K5eyxuaPvWJm")
 
@@ -36,7 +39,6 @@ for(i in 1:nrow(stocktickervector))
     if(!is.null(myfuture$Last[x]) && !is.na(myfuture$Last[x]) && myfuture$Last[x] != "NA")
     {
       query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Last[x],")",sep="")
-      print(query)
       dbSendQuery(mydb,query)
     }
   }
