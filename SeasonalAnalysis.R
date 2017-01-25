@@ -8,13 +8,13 @@ myhost <- "cemoptions.cloudapp.net"
 #Check if the file exists, it not use a constant. 
 if(file.exists("/home/cem/portakal/futures.csv"))
 {
-  futuresblob <- read.csv("/home/cem/portakal/futures.csv", header=FALSE)  # read csv file 
+  futuresblob <- read.csv("/home/cem/portakal/futures.csv", header=FALSE,  colClasses = "character")  # read csv file 
   stocktickervector <- futuresblob[order(futuresblob$V1),c(1,2)]
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
   #stocktickervector <- sort(c("GC","NG"))
-  futuresblob <- read.csv("c:\\temp\\futures.csv", header=FALSE, stringsAsFactors=FALSE)  # read csv file 
+  futuresblob <- read.csv("c:\\temp\\futures.csv", header=FALSE,  colClasses = "character")  # read csv file 
   stocktickervector <- futuresblob[order(futuresblob$V1),c(1,2)]
 }
 
@@ -36,11 +36,21 @@ for(i in 1:nrow(stocktickervector))
   #Loop on the values pulled  
   for(x in 1:nrow(myfuture)) 
   {
-    if(!is.null(myfuture$Last[x]) && !is.na(myfuture$Last[x]) && myfuture$Last[x] != "NA")
-    {
-      query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Last[x],")",sep="")
-      dbSendQuery(mydb,query)
+    if(!grepl("ICE",stocktickervector[i,2])) #CME futures
+    { 
+      if(!is.null(myfuture$Last[x]) && !is.na(myfuture$Last[x]) && myfuture$Last[x] != "NA")
+      {
+        query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Last[x],")",sep="")
+        dbSendQuery(mydb,query)
+      }
+    } else { #ICE futures
+      if(!is.null(myfuture$Settle[x]) && !is.na(myfuture$Settle[x]) && myfuture$Settle[x] != "NA")
+      {
+        query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Settle[x],")",sep="")
+        dbSendQuery(mydb,query)
+      }
     }
+    
   }
   
   #Close the database
@@ -114,7 +124,6 @@ for(i in 1:nrow(stocktickervector))
   dbDisconnect((mydb))
   
 }
-
 
 
 
