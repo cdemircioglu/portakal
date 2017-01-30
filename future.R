@@ -194,9 +194,9 @@ for(stockticker in stocktickervector)
   }
   
   #Update the ZB to ticks
-  finalresulttable[finalresulttable$future == "ZB",11] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",11])) #Sell
-  finalresulttable[finalresulttable$future == "ZB",10] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",10])) #Buy
-  finalresulttable[finalresulttable$future == "ZB",8] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",8])) #Close
+  #finalresulttable[finalresulttable$future == "ZB",11] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",11])) #Sell
+  #finalresulttable[finalresulttable$future == "ZB",10] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",10])) #Buy
+  #finalresulttable[finalresulttable$future == "ZB",8] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",8])) #Close
   
 }
 
