@@ -127,6 +127,8 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 {
   futuresblob <- read.csv("/home/cem/portakal/futures.csv", header=FALSE)  # read csv file 
   stocktickervector <- sort(as.vector(futuresblob[,1]))
+  stocktickervector <- stocktickervector[! stocktickervector %in% c("ZB")] #Remove ZB there is a but in R about the decimals in ZB.
+  stocktickervector <- c(stocktickervector,"ZB") #Remove ZB there is a but in R about the decimals in ZB. 
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
@@ -194,8 +196,8 @@ for(stockticker in stocktickervector)
   }
   
   #Update the ZB to ticks
-  #finalresulttable[finalresulttable$future == "ZB",11] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",11])) #Sell
-  #finalresulttable[finalresulttable$future == "ZB",10] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",10])) #Buy
+  finalresulttable[finalresulttable$future == "ZB",11] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",11])) #Sell
+  finalresulttable[finalresulttable$future == "ZB",10] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",10])) #Buy
   finalresulttable[finalresulttable$future == "ZB",8] <- as.numeric(ConvertZB32(finalresulttable[finalresulttable$future == "ZB",8])) #Close
   
 }
@@ -262,9 +264,6 @@ resulttable$SELL2[resulttable$FUTURE == '6J'] <- resulttable$SELL2[resulttable$F
 #Find the significant figures
 for (i in 1:nrow(resulttable) ) {
   dec <- DecimalPlaces(resulttable$CLOSE[i])
-  if (resulttable$FUTURE[i] == "ZB") 
-    dec <- 2
-  
   resulttable$BUY[i] <- format(round(as.numeric(resulttable$BUY[i]), dec), nsmall = dec)
   resulttable$SELL[i] <- format(round(as.numeric(resulttable$SELL[i]), dec), nsmall = dec)  
   resulttable$BUY1[i] <- format(round(as.numeric(resulttable$BUY1[i]), dec), nsmall = dec)
