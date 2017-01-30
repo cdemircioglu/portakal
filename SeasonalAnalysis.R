@@ -3,7 +3,11 @@ library(lubridate)
 library(Quandl)
 library(RMySQL)
 
+#Set the server
 myhost <- "cemoptions.cloudapp.net"
+
+#Set the date for the future
+mydate <- format(Sys.time(), "%Y-%m-%d %H:%M:%d")
 
 #Check if the file exists, it not use a constant. 
 if(file.exists("/home/cem/portakal/futures.csv"))
@@ -111,9 +115,6 @@ for(i in 1:nrow(stocktickervector))
   #Find the positive negative counts
   posnegcount <- myfuture %>% group_by(MONTH) %>%  
     summarize(pos = sum(DIFF>0), neg = sum(DIFF<0))
-  
-  #Set the date for the future
-  mydate <- format(Sys.time(), "%Y-%m-%d %H:%M:%d")
   
   #Insert the values to the database
   dbSendQuery(mydb,paste("INSERT INTO futuresseasonality VALUES ('",stockticker,"','",mydate,"','MEAN',",noquote(paste(format(round(pchange$x, 2), nsmall = 2),collapse=",")),")",sep=""))
