@@ -26,7 +26,7 @@ ConvertZB32 <- function(price)
 {
   wholenumber <- floor(price)
   fraction <- ((price - wholenumber)*0.32) + wholenumber
-  as.numeric(formatC(fraction,digits=2, format="f"))
+  formatC(fraction,digits=2, format="f")
 }
 
 futures <- function(time_window,standarddeviation,stockdata,period)
