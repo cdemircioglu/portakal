@@ -73,5 +73,5 @@ names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP
 
 #Create a table
 finaldt <- as.data.table(result)
-print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="emailcontent_seasonality.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
 
