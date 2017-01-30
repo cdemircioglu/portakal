@@ -308,5 +308,6 @@ close(fileConn)
 
 #Create a table
 finaldt <- as.data.table(resulttable[,c(1:3,6,8,7,9,10,15,16)])
+setorder(finaldt, FUTURE, PERIOD)
 print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
 #print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="emailcontent.html")
