@@ -262,6 +262,9 @@ resulttable$SELL2[resulttable$FUTURE == '6J'] <- resulttable$SELL2[resulttable$F
 #Find the significant figures
 for (i in 1:nrow(resulttable) ) {
   dec <- DecimalPlaces(resulttable$CLOSE[i])
+  if (resulttable$FUTURE[i] == "ZB") 
+    dec <- 2
+  
   resulttable$BUY[i] <- format(round(as.numeric(resulttable$BUY[i]), dec), nsmall = dec)
   resulttable$SELL[i] <- format(round(as.numeric(resulttable$SELL[i]), dec), nsmall = dec)  
   resulttable$BUY1[i] <- format(round(as.numeric(resulttable$BUY1[i]), dec), nsmall = dec)
