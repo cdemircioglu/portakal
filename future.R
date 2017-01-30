@@ -26,7 +26,7 @@ ConvertZB32 <- function(price)
 {
   wholenumber <- floor(price)
   fraction <- ((price - wholenumber)*0.32) + wholenumber
-  formatC(fraction,digits=2, format="f")
+  as.numeric(formatC(fraction,digits=2, format="f"))
 }
 
 futures <- function(time_window,standarddeviation,stockdata,period)
@@ -130,7 +130,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-  stocktickervector <- sort(c("6J"))
+  stocktickervector <- sort(c("ZB"))
 }
 
 myperiod <- c(1,5,10)
@@ -306,4 +306,5 @@ close(fileConn)
 
 #Create a table
 finaldt <- as.data.table(resulttable[,c(1:3,6,8,7,9,10,15,16)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
+#print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="/home/cem/emailcontent.html")
+print(xtable(as.data.frame.matrix(finaldt),digits=c(0,1,4,0,4,4,4,4,4,4,4)), type='html', file="emailcontent.html")
