@@ -18,9 +18,10 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-  stocktickervector <- sort(c("CL","SI"))
+  stocktickervector <- sort(c("CL","HE"))
 }
 
+#Loop on stock tickers
 for(stockticker in stocktickervector)
 {
   #Processing now
