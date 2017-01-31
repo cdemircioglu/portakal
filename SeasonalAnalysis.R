@@ -22,6 +22,16 @@ if(file.exists("/home/cem/portakal/futures.csv"))
   stocktickervector <- futuresblob[order(futuresblob$V1),c(1,2)]
 }
 
+#Truncate the table first
+#Connection settings and the dataset
+mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+
+query <- "TRUNCATE TABLE futuresdata;"
+dbSendQuery(mydb,query)
+
+#Close the database
+dbDisconnect((mydb))
+
 #Write to the database
 for(i in 1:nrow(stocktickervector)) 
 {
@@ -44,13 +54,13 @@ for(i in 1:nrow(stocktickervector))
     { 
       if(!is.null(myfuture$Last[x]) && !is.na(myfuture$Last[x]) && myfuture$Last[x] != "NA")
       {
-        query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Last[x],")",sep="")
+        query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Last[x],",",myfuture$High[x],",",myfuture$Low[x],")",sep="")
         dbSendQuery(mydb,query)
       }
     } else { #ICE futures
       if(!is.null(myfuture$Settle[x]) && !is.na(myfuture$Settle[x]) && myfuture$Settle[x] != "NA")
       {
-        query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Settle[x],")",sep="")
+        query <- paste("INSERT INTO futuresdata VALUES('",stockticker,"','",myfuture$Date[x],"',",myfuture$Settle[x],",",myfuture$High[x],",",myfuture$Low[x],")",sep="")
         dbSendQuery(mydb,query)
       }
     }
