@@ -1,4 +1,4 @@
-# This is a test comment
+rm(list=ls(all=TRUE)) 
 #Load the library
 library(RMySQL)
 library(xtable)
@@ -31,5 +31,34 @@ for(stockticker in stocktickervector)
   mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
   rs = dbSendQuery(mydb, paste("CALL GetMonthlySD('",stockticker,"')",sep=""))
   stockdata = fetch(rs, n=-1)
-  
 }
+
+#Close the database connections
+killDbConnections <- function () {
+  all_cons <- dbListConnections(MySQL())
+  print(all_cons)
+  
+  for(con in all_cons)
+    +  dbDisconnect(con)
+  print(paste(length(all_cons), " connections killed."))
+}
+
+killDbConnections()
+
+gap_down = 0
+results = data.frame(MONTH = NA, AVE_GAP_D =NA, STD_GAP_D = NA)
+for (j in 1:12){
+  for(i in 1:floor(dim(stockdata)[1]/12)-1 ){
+    gap_down[i] = (stockdata$MCLOSE[i*12+j-2]-min(stockdata$MLOW[i*12+j-1],stockdata$MLOW[i*12+j]))/stockdata$MCLOSE[i*12+j-2]
+  }
+ 
+  print(length(gap_down))
+  temp_results = data.frame(MONTH = j, AVE_GAP_D =mean(gap_down), STD_GAP_D = sd(gap_down))
+  results = rbind(temp_results, results)
+}
+
+#Example Usage
+print("For February entry prices are: Mean, Mean+1SD, Mean +2SD")
+print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-0*results$STD_GAP_D[11]))
+print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-1*results$STD_GAP_D[11]))
+print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-2*results$STD_GAP_D[11]))
