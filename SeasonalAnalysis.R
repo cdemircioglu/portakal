@@ -53,7 +53,7 @@ for(i in 1:nrow(stocktickervector))
     myfuture <- myfuture[,c(1,3,4,5)]
   } else
   {
-    myfuture <- myfuture[,c(1,3,4,7)]
+    myfuture <- myfuture[,c(1,3,4,5)]
   }
   
   #Only consider the complete cases
