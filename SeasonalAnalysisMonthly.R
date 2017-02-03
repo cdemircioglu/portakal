@@ -18,7 +18,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-  stocktickervector <- sort(c("CL","HE"))
+  stocktickervector <- sort(c("CL"))
 }
 
 #Loop on stock tickers
@@ -53,7 +53,7 @@ for (j in 1:12){
   }
  
   print(length(gap_down))
-  temp_results = data.frame(MONTH = j, AVE_GAP_D =mean(gap_down), STD_GAP_D = sd(gap_down))
+  temp_results = data.frame(MONTH = j, AVE_GAP_D =mean(gap_down[which(gap_down>0)]), STD_GAP_D = sd(gap_down[which(gap_down>0)]))
   results = rbind(temp_results, results)
 }
 
@@ -62,3 +62,5 @@ print("For February entry prices are: Mean, Mean+1SD, Mean +2SD")
 print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-0*results$STD_GAP_D[11]))
 print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-1*results$STD_GAP_D[11]))
 print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-2*results$STD_GAP_D[11]))
+
+
