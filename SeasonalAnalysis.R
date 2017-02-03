@@ -47,6 +47,15 @@ for(i in 1:nrow(stocktickervector))
   #Get the futures
   myfuture <- Quandl(paste("CHRIS/",stocktickervector[i,2],sep=""), start_date="2000-12-31", api_key="zK6coAV1K5eyxuaPvWJm")
 
+  #Reduce the myfuture
+  if(!grepl("ICE",stocktickervector[i,2])) #CME futures
+  {
+    myfuture <- myfuture[,c(1,3,4,5)]
+  } else
+  {
+    myfuture <- myfuture[,c(1,3,4,7)]
+  }
+  
   #Only consider the complete cases
   myfuture <- myfuture[complete.cases(myfuture),]
   
