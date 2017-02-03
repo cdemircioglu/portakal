@@ -47,6 +47,9 @@ for(i in 1:nrow(stocktickervector))
   #Get the futures
   myfuture <- Quandl(paste("CHRIS/",stocktickervector[i,2],sep=""), start_date="2000-12-31", api_key="zK6coAV1K5eyxuaPvWJm")
 
+  #Only consider the complete cases
+  myfuture <- myfuture[complete.cases(myfuture),]
+  
   #Loop on the values pulled  
   for(x in 1:nrow(myfuture)) 
   {
