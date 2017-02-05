@@ -10,6 +10,8 @@ Rscript /home/cem/portakal/future.R
 #Rscript /home/cem/portakal/future_pair.R
 Rscript /home/cem/portakal/datatest.R
 Rscript /home/cem/portakal/SeasonalAnalysisEmail.R
+Rscript /home/cem/portakal/SeasonalAnalysisMonthly.R
+
 #Rscript /home/cem/portakal/profit.R
 
 subjectline=$(cat /home/cem/importantdates.txt)

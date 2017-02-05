@@ -111,4 +111,4 @@ for(stockticker in stocktickervector)
 #Create the table for output
 resultstable <- resultstable[complete.cases(resultstable),]
 finaldt <- as.data.table(resultstable)
-print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailseasonalitymontly.html")
+print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_seasonality_monthly.html")
