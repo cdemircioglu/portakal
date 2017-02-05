@@ -8,6 +8,15 @@ options(warn=-1)
 myhost <- "cemoptions.cloudapp.net"
 options(stringsAsFactors = FALSE)
 
+#Format the numbers
+DecimalPlaces <- function(x) {
+  if ((x %% 1) != 0) {
+    nchar(strsplit(sub('0+$', '', as.character(x)), ".", fixed=TRUE)[[1]][[2]])
+  } else {
+    return(0)
+  }
+}
+
 #Check if the file exists, it not use a constant. 
 if(file.exists("/home/cem/portakal/futures.csv"))
 {
@@ -20,6 +29,9 @@ if(file.exists("/home/cem/portakal/futures.csv"))
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
   stocktickervector <- sort(c("HE"))
 }
+
+#Create the resulting data frame
+resultstable <- data.frame(FUTURE=NA,BUY1=0.0,BUY1=0.0,SELL1=0.0,SELL2=0.0)
 
 #Loop on stock tickers
 for(stockticker in stocktickervector)
@@ -69,9 +81,18 @@ for(stockticker in stocktickervector)
   #Get the current month number
   currentmonth <- month(Sys.Date())
   
-  #THIS SHOULD BE FEBRUARY 1SD GAP DOWN
-  print(mclose*(1-results$AVE_GAP_D[currentmonth]-1*results$STD_GAP_D[currentmonth])*conversionfactor)
+  #Find the decimal places  
+  dec <- DecimalPlaces(mclose)
   
+  #THIS SHOULD BE FEBRUARY
+  buy1 <- format(round(mclose*(1-results$AVE_GAP_D[currentmonth]-1*results$STD_GAP_D[currentmonth])*conversionfactor, dec), nsmall = dec)
+  buy2 <- format(round(mclose*(1-results$AVE_GAP_D[currentmonth]-2*results$STD_GAP_D[currentmonth])*conversionfactor, dec), nsmall = dec)
+  sell1 <- format(round(mclose*(1+results$AVE_GAP_U[currentmonth]+1*results$STD_GAP_U[currentmonth])*conversionfactor, dec), nsmall = dec)
+  sell2 <- format(round(mclose*(1+results$AVE_GAP_U[currentmonth]+2*results$STD_GAP_U[currentmonth])*conversionfactor, dec), nsmall = dec)
+  
+  #Create a table
+  resultstable <- rbind(resultstable, c(stockticker,buy1,buy2,sell1,sell2))  
+   
   #Example Usage
   print("For February entry prices are: Mean, Mean+1SD, Mean +2SD")
   print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-0*results$STD_GAP_D[11])*conversionfactor )
@@ -87,3 +108,7 @@ for(stockticker in stocktickervector)
   
 }
 
+#Create the table for output
+resultstable <- resultstable[complete.cases(resultstable),]
+finaldt <- as.data.table(resultstable)
+print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailseasonalitymontly.html")
