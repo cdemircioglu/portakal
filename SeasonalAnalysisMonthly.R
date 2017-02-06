@@ -43,6 +43,7 @@ for(stockticker in stocktickervector)
   mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
   rs = dbSendQuery(mydb, paste("CALL GetMonthlySD('",stockticker,"')",sep=""))
   stockdata = fetch(rs, n=-1)
+<<<<<<< HEAD
   
   #Set the parameters
   gap_down = 0
@@ -54,6 +55,19 @@ for(stockticker in stocktickervector)
   #This is the logic for two months. Buy in Jan, sell in Feb. 
   for (j in 1:12){
     for(i in 1:floor((dim(stockdata)[1]-2)/12) ){
+=======
+
+  #Set the parameters
+  gap_down = 0
+  gap_up=0
+
+  #Create the resulting data frame
+  results = data.frame(MONTH = NA, AVE_GAP_D =NA, STD_GAP_D = NA, AVE_GAP_U=NA, STD_GAP_U=NA)
+
+  #This is the logic for two months. Buy in Jan, sell in Feb. 
+  for (j in 1:12){
+    for(i in 1:floor(dim(stockdata)[1]/12)-1 ){
+>>>>>>> e2eda3ce6725fb4ba6b5271d9c504dd767cb3988
       gap_down[i] = (stockdata$MCLOSE[i*12+j-2]-min(stockdata$MLOW[i*12+j-1],stockdata$MLOW[i*12+j]))/stockdata$MCLOSE[i*12+j-2]
       gap_up[i] = (-stockdata$MCLOSE[i*12+j-2]+max(stockdata$MHIGH[i*12+j-1],stockdata$MHIGH[i*12+j]))/stockdata$MCLOSE[i*12+j-2]
     }
@@ -92,7 +106,11 @@ for(stockticker in stocktickervector)
   
   #Create a table
   resultstable <- rbind(resultstable, c(stockticker,buy1,buy2,sell1,sell2))  
+<<<<<<< HEAD
   
+=======
+   
+>>>>>>> e2eda3ce6725fb4ba6b5271d9c504dd767cb3988
   #Example Usage
   print("For February entry prices are: Mean, Mean+1SD, Mean +2SD")
   print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-0*results$STD_GAP_D[11])*conversionfactor )
@@ -111,4 +129,8 @@ for(stockticker in stocktickervector)
 #Create the table for output
 resultstable <- resultstable[complete.cases(resultstable),]
 finaldt <- as.data.table(resultstable)
+<<<<<<< HEAD
 print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_seasonality_monthly.html")
+=======
+print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_seasonality_monthly.html")
+>>>>>>> e2eda3ce6725fb4ba6b5271d9c504dd767cb3988
