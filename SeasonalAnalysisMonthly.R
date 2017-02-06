@@ -80,7 +80,7 @@ for(stockticker in stocktickervector)
   mclose <- tail(stockdata$MCLOSE,1)
   
   #Get the current month number
-  currentmonth <- month(Sys.Date())
+  currentmonth <- (month(Sys.Date())+1) %% 12 #Always use the forward month
   
   #Find the decimal places  
   dec <- DecimalPlaces(mclose)
