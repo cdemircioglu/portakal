@@ -116,16 +116,6 @@ for(stockticker in stocktickervector)
   #Create a table
   resultstable <- rbind(resultstable, c(stockticker,buy1,buy2,sell1,sell2))  
   
-  #Example Usage
-  #print("For February entry prices are: Mean, Mean+1SD, Mean +2SD")
-  #print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-0*results$STD_GAP_D[11])*conversionfactor )
-  #print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-1*results$STD_GAP_D[11])*conversionfactor  )
-  #print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-2*results$STD_GAP_D[11])*conversionfactor )
-  #print("Short targets")
-  #print(stockdata$MCLOSE[192]*(1+results$AVE_GAP_U[11]+0*results$STD_GAP_U[11])*conversionfactor)
-  #print(stockdata$MCLOSE[192]*(1+results$AVE_GAP_U[11]+1*results$STD_GAP_U[11])*conversionfactor)
-  #print(stockdata$MCLOSE[192]*(1+results$AVE_GAP_U[11]+2*results$STD_GAP_U[11])*conversionfactor)  
-  
   #Close the database
   dbDisconnect((mydb))
   
