@@ -67,6 +67,9 @@ for(i in 1:nrow(stocktickervector))
   rs2 = dbSendQuery(mydb, query)
   myfuture2 = fetch(rs2, n=-1)
   
+  if(head(strsplit(stockticker,'')[[1]],1) == 6)
+    myfuture2 <- 100*myfuture2
+  
   #Add the buy sell figures from the monthly notification figures
   my <- c(my,myfuture2)
   
