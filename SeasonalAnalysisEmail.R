@@ -92,6 +92,7 @@ currentmonth2 <- ((currentmonth+2) %% 12)+1
 
 #Create a table
 finaldt <- as.data.table(result[,c(1,currentmonth+1,currentmonth1,currentmonth2,15:18,14)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
+#print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
+print(xtable(as.data.frame.matrix(finaldt)), type="html", file="/home/cem/emailcontent_seasonality.html")
 
 
