@@ -13,7 +13,7 @@ options(stringsAsFactors=F)
 mydate <- format(Sys.time(), "%Y-%m-%d %H:%M:%d")
 
 #Result set
-result <- data.frame(Col1=character(),Col2=character(),Col3=character(),Col4=character(),Col5=character(),Col6=character(),Col7=character(),Col8=character(),Col9=character(),Col10=character(),Col11=character(),Col12=character(),Col13=character(),Col14=character(), stringsAsFactors=FALSE)
+result <- data.frame(Col1=character(),Col2=character(),Col3=character(),Col4=character(),Col5=character(),Col6=character(),Col7=character(),Col8=character(),Col9=character(),Col10=character(),Col11=character(),Col12=character(),Col13=character(),Col14=character(),Col15=character(),Col16=character(),Col17=character(),Col18=character(), stringsAsFactors=FALSE)
 
 #Check if the file exists, it not use a constant. 
 if(file.exists("/home/cem/portakal/futures.csv"))
@@ -70,6 +70,10 @@ for(i in 1:nrow(stocktickervector))
   #Add the buy sell figures from the monthly notification figures
   my <- c(my,myfuture2)
   
+  #Rename the columns
+  names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
+  names(my) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
+  
   #Add the vector to results data frame
   result <- rbind(result,my)
   
@@ -88,6 +92,6 @@ currentmonth2 <- ((currentmonth+2) %% 12)+1
 
 #Create a table
 finaldt <- as.data.table(result[,c(1,currentmonth+1,currentmonth1,currentmonth2,15:18,14)])
-print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
+#print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
 
 
