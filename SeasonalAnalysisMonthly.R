@@ -27,7 +27,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-  stocktickervector <- sort(c("HE"))
+  stocktickervector <- sort(c("6M"))
 }
 
 #Create the resulting data frame
@@ -82,7 +82,7 @@ for(stockticker in stocktickervector)
   currentmonth <- (month(Sys.Date())+1) %% 12 #Always use the forward month
   
   #Find the decimal places  
-  dec <- DecimalPlaces(mclose)
+  dec <- DecimalPlaces(tail(stockdata$SETTLE,1))
   
   #Find base 
   buy0 <- format(round(mclose*(1-results$AVE_GAP_D[currentmonth]-0*results$STD_GAP_D[currentmonth])*conversionfactor, dec), nsmall = dec)
