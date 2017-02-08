@@ -44,6 +44,10 @@ for(i in 1:nrow(stocktickervector))
   #Get CME address
   stocktickervector[i,3] <- gsub('[0-9]+', '', (strsplit(stocktickervector[i,2],"_"))[[1]][2])
   
+  #Exceptions
+  if (stockticker == "BZ")
+    stocktickervector[i,3] <- stockticker
+  
   #Get the futures
   myfuture <- Quandl(paste("CFTC/",stocktickervector[i,3],"_FO_ALL",sep=""), api_key="zK6coAV1K5eyxuaPvWJm")
   
