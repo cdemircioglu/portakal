@@ -47,6 +47,9 @@ for(i in 1:nrow(stocktickervector))
   #Exceptions
   if (stockticker == "BZ")
     stocktickervector[i,3] <- stockticker
+  if (stockticker == "ZW")
+    stocktickervector[i,3] <- "MW"
+  
   
   #Get the futures
   myfuture <- Quandl(paste("CFTC/",stocktickervector[i,3],"_FO_ALL",sep=""), api_key="zK6coAV1K5eyxuaPvWJm")
