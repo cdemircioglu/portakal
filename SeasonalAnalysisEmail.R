@@ -92,9 +92,10 @@ names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP
 currentmonth <- month(myfuture[1,2]) ##Current month
 currentmonth1 <- ((currentmonth+1) %% 12)+1 
 currentmonth2 <- ((currentmonth+2) %% 12)+1
+currentmonth3 <- ((currentmonth+3) %% 12)+1
 
 #Create a table
-finaldt <- as.data.table(result[,c(1,currentmonth+1,currentmonth1,currentmonth2,15:18,14)])
+finaldt <- as.data.table(result[,c(1,currentmonth+1,currentmonth1,currentmonth2,currentmonth3,15:18,14)])
 #print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
 print(xtable(as.data.frame.matrix(finaldt)), type="html", file="/home/cem/emailcontent_seasonality.html")
 
