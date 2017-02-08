@@ -13,7 +13,7 @@ options(stringsAsFactors=F)
 mydate <- format(Sys.time(), "%Y-%m-%d %H:%M:%d")
 
 #Result set
-result <- data.frame(Col1=character(),Col2=character(),Col3=character(),Col4=character(),Col5=character(),Col6=character(),Col7=character(),Col8=character(),Col9=character(),Col10=character(),Col11=character(),Col12=character(),Col13=character(),Col14=character(), stringsAsFactors=FALSE)
+result <- data.frame(Col1=character(),Col2=character(),Col3=character(),Col4=character(),Col5=character(),Col6=character(),Col7=character(),Col8=character(),Col9=character(),Col10=character(),Col11=character(),Col12=character(),Col13=character(),Col14=character(),Col15=character(),Col16=character(),Col17=character(),Col18=character(), stringsAsFactors=FALSE)
 
 #Check if the file exists, it not use a constant. 
 if(file.exists("/home/cem/portakal/futures.csv"))
@@ -60,6 +60,23 @@ for(i in 1:nrow(stocktickervector))
   #Add the snapshotdate
   my <- c(my,as.character(as.Date(myfuture[1,2]))) #Snapshotdate
   
+  #Get the monthly notification figures
+  query <- "SELECT BUY05 AS BUY1, BUY1 AS BUY2, SELL05 AS SELL1, SELL1 AS SELL2 FROM futurespredict WHERE future = 'CCC' AND PERIOD = 30 AND SNAPSHOTDATE = 'DDD'"
+  query <- gsub("CCC", stockticker, query)
+  query <- gsub("DDD", as.Date(myfuture[1,2]), query)
+  rs2 = dbSendQuery(mydb, query)
+  myfuture2 = fetch(rs2, n=-1)
+  
+  if(head(strsplit(stockticker,'')[[1]],1) == 6)
+    myfuture2 <- 100*myfuture2
+  
+  #Add the buy sell figures from the monthly notification figures
+  my <- c(my,myfuture2)
+  
+  #Rename the columns
+  names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
+  names(my) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
+  
   #Add the vector to results data frame
   result <- rbind(result,my)
   
@@ -69,9 +86,17 @@ for(i in 1:nrow(stocktickervector))
 }
 
 #Rename the columns
-names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE")
+names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
+
+#Find the current three months
+currentmonth <- month(myfuture[1,2]) ##Current month
+currentmonth1 <- ((currentmonth+1) %% 12)+1 
+currentmonth2 <- ((currentmonth+2) %% 12)+1
+currentmonth3 <- ((currentmonth+3) %% 12)+1
 
 #Create a table
-finaldt <- as.data.table(result)
-print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
+finaldt <- as.data.table(result[,c(1,currentmonth+1,currentmonth1,currentmonth2,currentmonth3,15:18,14)])
+#print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
+print(xtable(as.data.frame.matrix(finaldt)), type="html", file="/home/cem/emailcontent_seasonality.html")
+
 

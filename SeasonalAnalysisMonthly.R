@@ -27,7 +27,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 } else
 {
   #stocktickervector <- sort(c("ZB","NG","ES","6J","6A","6B","CL","SB","6E","GC","SI"))
-  stocktickervector <- sort(c("HE"))
+  stocktickervector <- sort(c("6M"))
 }
 
 #Create the resulting data frame
@@ -50,7 +50,6 @@ for(stockticker in stocktickervector)
   
   #Create the resulting data frame
   results = data.frame(MONTH = NA, AVE_GAP_D =NA, STD_GAP_D = NA, AVE_GAP_U=NA, STD_GAP_U=NA)
-  
   
   #This is the logic for two months. Buy in Jan, sell in Feb. [Referene point is the end of December]
   for (j in 1:12){
@@ -80,36 +79,51 @@ for(stockticker in stocktickervector)
   mclose <- tail(stockdata$MCLOSE,1)
   
   #Get the current month number
-  currentmonth <- month(Sys.Date())
+  currentmonth <- (month(Sys.Date())+1) %% 12 #Always use the forward month
   
   #Find the decimal places  
-  dec <- DecimalPlaces(mclose)
+  dec <- DecimalPlaces(tail(stockdata$SETTLE,1))
   
-  #THIS SHOULD BE FEBRUARY
+  #Find base 
+  buy0 <- format(round(mclose*(1-results$AVE_GAP_D[currentmonth]-0*results$STD_GAP_D[currentmonth])*conversionfactor, dec), nsmall = dec)
+  sell0 <- format(round(mclose*(1+results$AVE_GAP_U[currentmonth]+0*results$STD_GAP_U[currentmonth])*conversionfactor, dec), nsmall = dec)  
+  
+  #Find the 1SD 2SD figures
   buy1 <- format(round(mclose*(1-results$AVE_GAP_D[currentmonth]-1*results$STD_GAP_D[currentmonth])*conversionfactor, dec), nsmall = dec)
   buy2 <- format(round(mclose*(1-results$AVE_GAP_D[currentmonth]-2*results$STD_GAP_D[currentmonth])*conversionfactor, dec), nsmall = dec)
   sell1 <- format(round(mclose*(1+results$AVE_GAP_U[currentmonth]+1*results$STD_GAP_U[currentmonth])*conversionfactor, dec), nsmall = dec)
   sell2 <- format(round(mclose*(1+results$AVE_GAP_U[currentmonth]+2*results$STD_GAP_U[currentmonth])*conversionfactor, dec), nsmall = dec)
   
+  #Futures predict table entry. The period will be 30 for monthly ones. At this point 
+  #we can't calculate as of RSI values, hence -1. Another MySQL bug, can not call a proc and insert, delete from the same connection. 
+  #Create a new connection.
+  mydb2 = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+  
+  #First delete already existing record
+  query <- "DELETE FROM futurespredict WHERE period = 30 AND FUTURE = 'CCC' AND SNAPSHOTDATE = (SELECT * FROM (SELECT MAX(SNAPSHOTDATE) FROM futurespredict) A );"
+  query <- gsub("CCC", stockticker, query)
+  dbSendQuery(mydb2,query)
+  
+  #Second insert the new record
+  query <- "INSERT INTO futurespredict SELECT DISTINCT FUTURE,`CLOSE`,DDD,SNAPSHOTDATE,30 AS PERIOD,-1 AS BUYRSI1,-1 AS BUYRSI2,-1 AS SELLRSI1,-1 AS SELLRSI2,RSI,MFI,MVA FROM futurespredict WHERE FUTURE = 'CCC' AND SNAPSHOTDATE = (SELECT MAX(SNAPSHOTDATE) FROM futurespredict);"
+  query <- gsub("CCC", stockticker, query)
+  query <- gsub("DDD", paste(buy0,sell0,buy1,sell1,buy2,sell2,sep=","), query)
+  dbSendQuery(mydb2,query)
+  
+  #Close the database
+  dbDisconnect((mydb2))
+  
   #Create a table
   resultstable <- rbind(resultstable, c(stockticker,buy1,buy2,sell1,sell2))  
-  
-  #Example Usage
-  print("For February entry prices are: Mean, Mean+1SD, Mean +2SD")
-  print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-0*results$STD_GAP_D[11])*conversionfactor )
-  print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-1*results$STD_GAP_D[11])*conversionfactor  )
-  print(stockdata$MCLOSE[192]*(1-results$AVE_GAP_D[11]-2*results$STD_GAP_D[11])*conversionfactor )
-  print("Short targets")
-  print(stockdata$MCLOSE[192]*(1+results$AVE_GAP_U[11]+0*results$STD_GAP_U[11])*conversionfactor)
-  print(stockdata$MCLOSE[192]*(1+results$AVE_GAP_U[11]+1*results$STD_GAP_U[11])*conversionfactor)
-  print(stockdata$MCLOSE[192]*(1+results$AVE_GAP_U[11]+2*results$STD_GAP_U[11])*conversionfactor)  
   
   #Close the database
   dbDisconnect((mydb))
   
 }
 
+#The data of this script is stored at the database and retreived by seasonalanalysis email script. 
+
 #Create the table for output
-resultstable <- resultstable[complete.cases(resultstable),]
-finaldt <- as.data.table(resultstable)
-print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_seasonality_monthly.html")
+#resultstable <- resultstable[complete.cases(resultstable),]
+#finaldt <- as.data.table(resultstable)
+#print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_seasonality_monthly.html")

@@ -126,7 +126,7 @@ for(i in 1:nrow(stocktickervector))
   myfuture <- myfuture[1:nrow(myfuture)-1,] 
   
   #Remove the last row with na
-  myfuture$DIFF <- (myfuture[,3] - myfuture[,4])/myfuture[,4]*100
+  myfuture$DIFF <- (myfuture[,3] - myfuture[,6])/myfuture[,6]*100
   
   #Add the months
   myfuture$MONTH <- month(myfuture$SNAPSHOTDATE)
