@@ -63,7 +63,6 @@ for(i in 1:nrow(stocktickervector))
     query <- gsub("BBB", as.character(myfuture[j,1]), query)
     query <- gsub("CCC", noquote(paste(myfuture[j,c(2:length(myfuture))],collapse=",")), query) 
     
-    print(query)
     #Execute the query
     dbSendQuery(mydb, query)   
   }
