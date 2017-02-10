@@ -4,7 +4,7 @@ library(Quandl)
 library(RMySQL)
 library(xtable)
 library(data.table)
-#Test git
+#Test git test 2
 #Set the server
 myhost <- "cemoptions.cloudapp.net"
 options(stringsAsFactors=F)
