@@ -49,6 +49,10 @@ for(i in 1:nrow(stocktickervector))
   
   #Get the futures
   myfuture <- Quandl(paste("CFTC/",stocktickervector[i,3],"_FO_ALL",sep=""), api_key="zK6coAV1K5eyxuaPvWJm")
+
+  #Remove the extra dealer spread column if it is a currency
+  if(startsWith(stockticker, "6"))
+    myfuture <- subset(myfuture, select = -c(5) )
   
   #Loop on the rows
   for (j in 1:nrow(myfuture)){
