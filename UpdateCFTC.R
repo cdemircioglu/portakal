@@ -16,6 +16,9 @@ dbSendQuery(mydb, "TRUNCATE TABLE futurescftc;")
 #Set the date for the future
 mydate <- format(Sys.time(), "%Y-%m-%d %H:%M:%d")
 
+#Rank function
+perc.rank <- function(x, xo)  length(x[x <= xo])/length(x)*100
+
 #Check if the file exists, it not use a constant. 
 if(file.exists("/home/cem/portakal/futures.csv"))
 {
@@ -28,7 +31,6 @@ if(file.exists("/home/cem/portakal/futures.csv"))
   futuresblob <- read.csv("c:\\temp\\futures.csv", header=FALSE,  colClasses = "character")  # read csv file 
   stocktickervector <- futuresblob[order(futuresblob$V1),c(1,2)]
 }
-
 
 
 #Loop on the futures
@@ -54,14 +56,19 @@ for(i in 1:nrow(stocktickervector))
   if(startsWith(stockticker, "6") || stockticker == "DX" || stockticker == "ES" || stockticker == "NQ" || stockticker == "YM" || stockticker == "ZB"|| stockticker == "TF")
     myfuture <- subset(myfuture, select = -c(5) )
   
+  #Calculate the percent rank
+  prankvector <- (myfuture[,8]-myfuture[,9]+myfuture[,11]-myfuture[,12])/myfuture[,2]
+  prank <- perc.rank(prankvector,prankvector[1])
+  
   #Loop on the rows
   for (j in 1:nrow(myfuture)){
 
     #Create the query
-    query <- "INSERT INTO futurescftc VALUES ('AAA','BBB',CCC)"
+    query <- "INSERT INTO futurescftc VALUES ('AAA','BBB',CCC,DDD)"
     query <- gsub("AAA", stockticker, query)
     query <- gsub("BBB", as.character(myfuture[j,1]), query)
     query <- gsub("CCC", noquote(paste(myfuture[j,c(2:length(myfuture))],collapse=",")), query) 
+    query <- gsub("DDD", prank,query) 
     
     #Execute the query
     dbSendQuery(mydb, query)   
