@@ -75,13 +75,13 @@ for(i in 1:nrow(stocktickervector))
   my <- c(my,myfuture2)
   
   #Let's work on the COT report
-  query <- "SELECT DISTINCT PERCENTILERANKLARGESPEC FROM futurescftc WHERE future = 'CCC'"
+  query <- "SELECT GROUP_CONCAT(PERCENTILERANKLARGESPEC SEPARATOR ', ') AS PERCENTILERANKLARGESPEC FROM (SELECT PERCENTILERANKLARGESPEC FROM futurescftc WHERE future = 'CCC' ORDER BY SNAPSHOTDATE DESC LIMIT 3) A;"
   query <- gsub("CCC", stockticker, query)
   rs2 = dbSendQuery(mydb, query)
   myfuture2 = fetch(rs2, n=-1)
   
   #Add the buy sell figures from the monthly notification figures
-  my <- c(my,format(round(as.numeric(myfuture2$PERCENTILERANKLARGESPEC[1]), 2), nsmall = 2))
+  my <- c(my,myfuture2$PERCENTILERANKLARGESPEC[1])
   
   #Rename the columns
   names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRNKLRG")
