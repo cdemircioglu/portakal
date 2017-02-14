@@ -67,15 +67,25 @@ for(i in 1:nrow(stocktickervector))
   rs2 = dbSendQuery(mydb, query)
   myfuture2 = fetch(rs2, n=-1)
   
+  #The currency conversion
   if(head(strsplit(stockticker,'')[[1]],1) == 6)
     myfuture2 <- 100*myfuture2
   
   #Add the buy sell figures from the monthly notification figures
   my <- c(my,myfuture2)
   
+  #Let's work on the COT report
+  query <- "SELECT DISTINCT PERCENTILERANKLARGESPEC FROM futurescftc WHERE future = 'CCC'"
+  query <- gsub("CCC", stockticker, query)
+  rs2 = dbSendQuery(mydb, query)
+  myfuture2 = fetch(rs2, n=-1)
+  
+  #Add the buy sell figures from the monthly notification figures
+  my <- c(my,myfuture2)
+  
   #Rename the columns
-  names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
-  names(my) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
+  names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRANKLARGES")
+  names(my) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRANKLARGES")
   
   #Add the vector to results data frame
   result <- rbind(result,my)
@@ -86,7 +96,7 @@ for(i in 1:nrow(stocktickervector))
 }
 
 #Rename the columns
-names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2")
+names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRANKLARGES")
 
 #Find the current three months
 currentmonth <- month(myfuture[1,2]) ##Current month
@@ -95,7 +105,7 @@ currentmonth2 <- ((currentmonth+2) %% 12)+1
 currentmonth3 <- ((currentmonth+3) %% 12)+1
 
 #Create a table
-finaldt <- as.data.table(result[,c(1,currentmonth+1,currentmonth1,currentmonth2,currentmonth3,15:18,14)])
+finaldt <- as.data.table(result[,c(1,currentmonth+1,currentmonth1,currentmonth2,currentmonth3,15:19,14)])
 #print(xtable(as.data.frame.matrix(finaldt),digits=c(4,4,4,4,4,4,4,4,4,4,4,4,4,4,4)), type="html", file="/home/cem/emailcontent_seasonality.html")
 print(xtable(as.data.frame.matrix(finaldt)), type="html", file="/home/cem/emailcontent_seasonality.html")
 
