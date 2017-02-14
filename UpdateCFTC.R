@@ -57,7 +57,7 @@ for(i in 1:nrow(stocktickervector))
     myfuture <- subset(myfuture, select = -c(5) )
   
   #Calculate the percent rank
-  prankvector <- (myfuture[,8]-myfuture[,9]+myfuture[,11]-myfuture[,12])/myfuture[,2]
+  prankvector <- (myfuture[1:350,8]-myfuture[1:350,9]+myfuture[1:350,11]-myfuture[1:350,12])/myfuture[1:350,2]
   prank <- perc.rank(prankvector,prankvector[1])
   
   #Loop on the rows
