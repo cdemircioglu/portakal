@@ -84,8 +84,8 @@ for(i in 1:nrow(stocktickervector))
   my <- c(my,format(round(as.numeric(myfuture2$PERCENTILERANKLARGESPEC[1]), 2), nsmall = 2))
   
   #Rename the columns
-  names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRANKLARGES")
-  names(my) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRANKLARGES")
+  names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRNKLRG")
+  names(my) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRNKLRG")
   
   #Add the vector to results data frame
   result <- rbind(result,my)
@@ -96,7 +96,7 @@ for(i in 1:nrow(stocktickervector))
 }
 
 #Rename the columns
-names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRANKLARGES")
+names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRNKLRG")
 
 #Find the current three months
 currentmonth <- month(myfuture[1,2]) ##Current month
