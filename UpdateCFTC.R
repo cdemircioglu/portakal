@@ -36,6 +36,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 #Loop on the futures
 for(i in 1:nrow(stocktickervector))
 {
+
   #Get the ticket
   stockticker <- stocktickervector[i,1] #Get the symbol
   print(stockticker) #For debugging
@@ -56,9 +57,16 @@ for(i in 1:nrow(stocktickervector))
   if(startsWith(stockticker, "6") || stockticker == "DX" || stockticker == "ES" || stockticker == "NQ" || stockticker == "YM" || stockticker == "ZB"|| stockticker == "TF")
     myfuture <- subset(myfuture, select = -c(5) )
   
+  #Initialize the vector
+  vlength <- 30
+  prank <- vector('numeric', length=vlength)
+  
   #Calculate the percent rank
-  prankvector <- (myfuture[1:350,8]-myfuture[1:350,9]+myfuture[1:350,11]-myfuture[1:350,12])/myfuture[1:350,2]
-  prank <- perc.rank(prankvector,prankvector[1])
+  for (p in 1:vlength)
+  {
+    prankvector <- (myfuture[1+p:320+p,8]-myfuture[1+p:320+p,9]+myfuture[1+p:320+p,11]-myfuture[1+p:320+p,12])/myfuture[1+p:320+p,2]
+    prank[p] <- perc.rank(prankvector,prankvector[1])
+  }
   
   #Loop on the rows
   for (j in 1:nrow(myfuture)){
@@ -68,7 +76,14 @@ for(i in 1:nrow(stocktickervector))
     query <- gsub("AAA", stockticker, query)
     query <- gsub("BBB", as.character(myfuture[j,1]), query)
     query <- gsub("CCC", noquote(paste(myfuture[j,c(2:length(myfuture))],collapse=",")), query) 
-    query <- gsub("DDD", prank,query) 
+    
+    #Calculate the prank value
+    if(j<vlength)
+      query <- gsub("DDD", 
+                    format(round(as.numeric(prank[j]), 2), nsmall = 2)
+                    ,query) 
+    else
+      query <- gsub("DDD", 0,query) 
     
     #Execute the query
     dbSendQuery(mydb, query)   
