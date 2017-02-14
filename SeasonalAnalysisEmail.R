@@ -82,7 +82,6 @@ for(i in 1:nrow(stocktickervector))
   
   #Add the buy sell figures from the monthly notification figures
   my <- c(my,format(round(as.numeric(myfuture2$PERCENTILERANKLARGESPEC[1]), 2), nsmall = 2))
-  print(my)
   
   #Rename the columns
   names(result) <- c("FUTURE","JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC","SNAPSHOTDATE","BUY1","BUY2","SELL1","SELL2","PRANKLARGES")
