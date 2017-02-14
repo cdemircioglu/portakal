@@ -13,7 +13,7 @@ options(stringsAsFactors=F)
 mydate <- format(Sys.time(), "%Y-%m-%d %H:%M:%d")
 
 #Result set
-result <- data.frame(Col1=character(),Col2=character(),Col3=character(),Col4=character(),Col5=character(),Col6=character(),Col7=character(),Col8=character(),Col9=character(),Col10=character(),Col11=character(),Col12=character(),Col13=character(),Col14=character(),Col15=character(),Col16=character(),Col17=character(),Col18=character(), stringsAsFactors=FALSE)
+result <- data.frame(Col1=character(),Col2=character(),Col3=character(),Col4=character(),Col5=character(),Col6=character(),Col7=character(),Col8=character(),Col9=character(),Col10=character(),Col11=character(),Col12=character(),Col13=character(),Col14=character(),Col15=character(),Col16=character(),Col17=character(),Col18=character(),Col19=character(), stringsAsFactors=FALSE)
 
 #Check if the file exists, it not use a constant. 
 if(file.exists("/home/cem/portakal/futures.csv"))
@@ -81,7 +81,7 @@ for(i in 1:nrow(stocktickervector))
   myfuture2 = fetch(rs2, n=-1)
   
   #Add the buy sell figures from the monthly notification figures
-  my <- c(my,myfuture2$PERCENTILERANKLARGESPEC)
+  my <- c(my,format(round(as.numeric(myfuture2$PERCENTILERANKLARGESPEC[1]), 2), nsmall = 2))
   print(my)
   
   #Rename the columns
