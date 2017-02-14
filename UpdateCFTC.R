@@ -64,7 +64,7 @@ for(i in 1:nrow(stocktickervector))
   #Calculate the percent rank
   for (p in 1:vlength)
   {
-    prankvector <- (myfuture[1+p:320+p,8]-myfuture[1+p:320+p,9]+myfuture[1+p:320+p,11]-myfuture[1+p:320+p,12])/myfuture[1+p:320+p,2]
+    prankvector <- (myfuture[(1+p-1):(320+p-1),8]-myfuture[(1+p-1):(320+p-1),9]+myfuture[(1+p-1):(320+p-1),11]-myfuture[(1+p-1):(320+p-1),12])/myfuture[(1+p-1):(320+p-1),2]
     prank[p] <- perc.rank(prankvector,prankvector[1])
   }
   
