@@ -292,7 +292,7 @@ curDate <- Sys.Date()
 
 #Make sure we didn't pass the last thursday
 if(as.numeric(getNthDayOfWeek(third, Fri,as.numeric(format(curDate, format="%m")), as.numeric(format(curDate, format="%Y")))-Sys.Date()) < 0)
-{curDate <- curDate+10}
+{curDate <- curDate+15}
 
 #Calculate the days to option expiration 
 oExpirationDay <- (as.numeric(getNthDayOfWeek(third, Fri,as.numeric(format(curDate, format="%m")), as.numeric(format(curDate, format="%Y")))-Sys.Date()))
