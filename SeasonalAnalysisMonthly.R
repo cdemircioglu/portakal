@@ -114,7 +114,7 @@ for(stockticker in stocktickervector)
   dbDisconnect((mydb2))
   
   #Create a table
-  resultstable <- rbind(resultstable, c(stockticker,buy1,buy2,sell1,sell2))  
+  resultstable <- rbind(resultstable, c(stockticker,buy0,buy1,sell0,sell1))  
   
   #Close the database
   dbDisconnect((mydb))
