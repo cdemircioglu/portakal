@@ -31,7 +31,7 @@ if(file.exists("/home/cem/portakal/futures.csv"))
 }
 
 #Create the resulting data frame
-resultstable <- data.frame(FUTURE=NA,BUY1=0.0,BUY2=0.0,SELL1=0.0,SELL2=0.0)
+resultstable <- data.frame(FUTURE=NA,BUY0=0.0,BUY1=0.0,SELL0=0.0,SELL1=0.0)
 
 #Loop on stock tickers
 for(stockticker in stocktickervector)
