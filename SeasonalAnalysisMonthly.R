@@ -124,6 +124,6 @@ for(stockticker in stocktickervector)
 #The data of this script is stored at the database and retreived by seasonalanalysis email script. 
 
 #Create the table for output
-#resultstable <- resultstable[complete.cases(resultstable),]
-#finaldt <- as.data.table(resultstable)
-#print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_seasonality_monthly.html")
+resultstable <- resultstable[complete.cases(resultstable),]
+finaldt <- as.data.table(resultstable)
+print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_seasonality_monthly.html")
