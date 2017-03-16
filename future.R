@@ -301,9 +301,35 @@ oExpirationDay <- (as.numeric(getNthDayOfWeek(third, Fri,as.numeric(format(curDa
 lastdayofQuarter <- as.Date(as.yearqtr(Sys.Date()),frac=1)
 tWitchDay <- (as.numeric(getLastDayOfWeekInMonth(5, as.numeric(format(lastdayofQuarter, format="%m")), as.numeric(format(lastdayofQuarter, format="%Y")))-Sys.Date()))
 
+#Find the volume ratio for day, 10 days, and 30 days
+#Day value / MAX(1000 days of volume)
+#Connection settings and the dataset
+mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+rs = dbSendQuery(mydb, "CALL GetMarketVolume('SPY')")
+stockdata = fetch(rs, n=-1)
+
+SPY<-paste("SPY",do.call(paste, c(stockdata[c("DVOL", "WVOL","MVOL")], sep = ",")),sep="")
+
+#Close the database
+dbDisconnect((mydb))
+
+#Connection settings and the dataset
+mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+
+rs = dbSendQuery(mydb, "CALL GetMarketVolume('QQQ')")
+stockdata = fetch(rs, n=-1)
+
+QQQ<-paste("QQQ",do.call(paste, c(stockdata[c("DVOL", "WVOL","MVOL")], sep = ",")),sep="")
+
+#Close the database
+dbDisconnect((mydb))
+
+#Volume data string 
+VOL<-paste(SPY,QQQ)
+
 #Write to file
 fileConn<-file("/home/cem/importantdates.txt")
-writeLines(paste("OE:",oExpirationDay," TW:",tWitchDay, " SNAPSHOTDATE:", as.character(Sys.Date()) ,  sep=""), fileConn)
+writeLines(paste("OE:",oExpirationDay," TW:",tWitchDay,  VOL,  sep=""), fileConn)
 close(fileConn)
 
 #Create a table
