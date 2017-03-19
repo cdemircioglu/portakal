@@ -145,7 +145,7 @@ resultstable <- resultstable[order(resultstable$COL0),c(2:6)]
 
 #Create a table
 finaldt <- as.data.table(resultstable)
-print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/mailstats.html",include.colnames=FALSE,,include.rownames=FALSE)
+print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/emailcontent_stats.html",include.colnames=FALSE,,include.rownames=FALSE)
 
 
 
