@@ -31,7 +31,7 @@ for (j in 1:nrow(myfuture)){
   query <- "INSERT INTO cboemetric VALUES ('SKEW','AAA',BBB)"
   query <- gsub("AAA", myfuture[j,1], query)
   query <- gsub("BBB", as.character(myfuture[j,2]), query)
-
+  
   #Execute the query
   dbSendQuery(mydb, query)   
 }
@@ -50,6 +50,11 @@ for (j in 1:nrow(myfuture)){
   #Execute the query
   dbSendQuery(mydb, query)   
 }
+
+#Get the data from database, snapshotdate, skew, vix, left join on vix. 
+rs = dbSendQuery(mydb, "SELECT S.SNAPSHOTDATE, S.VALUE AS SKEW, V.VALUE AS VIX FROM (SELECT * FROM cboemetric where metric = 'SKEW') S LEFT JOIN (SELECT * FROM cboemetric where metric = 'VIX') V ON S.SNAPSHOTDATE = V.SNAPSHOTDATE ORDER BY S.SNAPSHOTDATE DESC")
+myfuture = fetch(rs, n=-1)
+
 #Calculate the SKEW/VIX ratio
 myfuture$'SKEW/VIX' <- myfuture$SKEW/myfuture$VIX 
 
@@ -121,8 +126,4 @@ resultstable <- resultstable[order(resultstable$COL0),c(2:6)]
 #Create a table
 finaldt <- as.data.table(resultstable)
 print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/mailstats.html",include.colnames=FALSE,,include.rownames=FALSE)
-
-
-
-
 
