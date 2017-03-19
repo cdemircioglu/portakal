@@ -51,6 +51,12 @@ for (j in 1:nrow(myfuture)){
   dbSendQuery(mydb, query)   
 }
 
+#Close the database
+dbDisconnect((mydb))
+
+#Connection settings and the dataset
+mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+
 #Get the data from database, snapshotdate, skew, vix, left join on vix. 
 rs = dbSendQuery(mydb, "SELECT S.SNAPSHOTDATE, S.VALUE AS SKEW, V.VALUE AS VIX FROM (SELECT * FROM cboemetric where metric = 'SKEW') S LEFT JOIN (SELECT * FROM cboemetric where metric = 'VIX') V ON S.SNAPSHOTDATE = V.SNAPSHOTDATE ORDER BY S.SNAPSHOTDATE DESC")
 myfuture = fetch(rs, n=-1)
@@ -83,10 +89,18 @@ resultstable <- rbind(
   ),resultstable
 )
 
+#Close the database
+dbDisconnect((mydb))
+
+#Connection settings and the dataset
+mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
 
 #Get the market volume data
 rs = dbSendQuery(mydb, "CALL GetMarketVolume('SPY')")
 stockdata = fetch(rs, n=-1)
+
+#Close the database
+dbDisconnect((mydb))
 
 #Show the last record
 resultstable <- rbind(
@@ -100,9 +114,15 @@ resultstable <- rbind(
   ),resultstable
 )
 
+#Connection settings and the dataset
+mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+
 #Get the market volume data
 rs = dbSendQuery(mydb, "CALL GetMarketVolume('QQQ')")
 stockdata = fetch(rs, n=-1)
+
+#Close the database
+dbDisconnect((mydb))
 
 #Show the last record
 resultstable <- rbind(
@@ -126,4 +146,6 @@ resultstable <- resultstable[order(resultstable$COL0),c(2:6)]
 #Create a table
 finaldt <- as.data.table(resultstable)
 print(xtable(as.data.frame.matrix(finaldt)), type='html', file="/home/cem/mailstats.html",include.colnames=FALSE,,include.rownames=FALSE)
+
+
 
