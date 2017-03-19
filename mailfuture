@@ -7,6 +7,7 @@ rm -f /home/cem/portakal/email*.html
 rm -f /home/cem/portakal/final.html
 
 Rscript /home/cem/portakal/future.R
+Rscript /home/cem/portakal/Stats.R
 #Rscript /home/cem/portakal/future_pair.R
 Rscript /home/cem/portakal/datatest.R
 Rscript /home/cem/portakal/SeasonalAnalysisMonthly.R
