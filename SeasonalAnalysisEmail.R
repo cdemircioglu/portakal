@@ -75,7 +75,7 @@ for(i in 1:nrow(stocktickervector))
   my <- c(my,myfuture2)
   
   #Let's work on the COT report
-  query <- "SELECT GROUP_CONCAT(FLOOR(PERCENTILERANKLARGESPEC) SEPARATOR ', ') AS PERCENTILERANKLARGESPEC, (SELECT MAX(B.SNAPSHOTDATE) FROM futurescftc B WHERE B.future = A.future) AS SNAPSHOTDATE FROM (SELECT future,PERCENTILERANKLARGESPEC FROM futurescftc WHERE future = 'CCC' ORDER BY SNAPSHOTDATE DESC LIMIT 3) A;"
+  query <- "SELECT GROUP_CONCAT(FLOOR(PERCENTILERANKLARGESPEC) SEPARATOR ', ') AS PERCENTILERANKLARGESPEC, (SELECT MAX(B.SNAPSHOTDATE) FROM futurescftc B WHERE B.future = A.future) AS SNAPSHOTDATE FROM (SELECT future,PERCENTILERANKLARGESPEC FROM futurescftc WHERE future = 'CCC' ORDER BY SNAPSHOTDATE DESC LIMIT 3) A GROUP BY A.future;"
   query <- gsub("CCC", stockticker, query)
   rs2 = dbSendQuery(mydb, query)
   myfuture2 = fetch(rs2, n=-1)
