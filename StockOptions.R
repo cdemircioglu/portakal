@@ -27,7 +27,7 @@ stocktickervector <- c("QQQ","SPY","XLE","XLF","TSLA","AAPL","AMZN","NFLX")
 #Loop on stock tickers
 for(stockticker in stocktickervector)
 {
-    optionchain <- getOptionChain(stockticker,NULL) 
+    optionchain <- try(getOptionChain(stockticker,NULL)) 
     STOCKPRICE <- getQuote(stockticker)$Last #Last stock price
     STRIKELEVEL <- 0 #Assume everything is at the money
     
