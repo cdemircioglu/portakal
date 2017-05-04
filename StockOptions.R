@@ -155,7 +155,7 @@ for(stockticker in stocktickervector)
             OPENINT <- option$OI[p] #Open interest
             STRIKE <- option$Strike[p] #Strike
             EXPIRY <- substr(gsub(stockticker,"20",rownames(option)[p]),1,8) #Expiration
-            SNAPSHOTDATE <- today()-1  #Snapshotdate #Server time is ahead of 
+            SNAPSHOTDATE <- today()  #Snapshotdate #Server time is ahead of 
               if (STOCKOPTIONTYPE == 'C') { 
                   STRIKEDISTANCE <- abs(STRIKELEVELCALL - p)
               } else {
