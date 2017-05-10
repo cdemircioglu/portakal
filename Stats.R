@@ -40,7 +40,7 @@ for (j in 1:nrow(myfuture)){
 dbDisconnect((mydb))
 
 #Let's sleep 5 seconds 
-Sys.sleep(5)
+Sys.sleep(60)
 
 #Get the VIX figures from the quandl
 myfuture2 <- Quandl("CBOE/VIX", start_date="1999-12-31", api_key="zK6coAV1K5eyxuaPvWJm")
