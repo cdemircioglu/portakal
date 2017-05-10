@@ -36,29 +36,41 @@ for (j in 1:nrow(myfuture)){
   dbSendQuery(mydb, query)   
 }
 
-#Get the VIX figures from the quandl
-myfuture <- Quandl("CBOE/VIX", start_date="1999-12-31", api_key="zK6coAV1K5eyxuaPvWJm")
-
-#Loop on the rows
-for (j in 1:nrow(myfuture)){
-  
-  #Create the query
-  query <- "INSERT INTO cboemetric VALUES ('VIX','AAA',BBB)"
-  query <- gsub("AAA", myfuture[j,1], query)
-  query <- gsub("BBB", as.character(myfuture[j,2]), query)
-  
-  #Execute the query
-  dbSendQuery(mydb, query)   
-}
-
 #Close the database
 dbDisconnect((mydb))
 
+#Let's sleep 5 seconds 
+Sys.sleep(5)
+
+#Get the VIX figures from the quandl
+myfuture2 <- Quandl("CBOE/VIX", start_date="1999-12-31", api_key="zK6coAV1K5eyxuaPvWJm")
+
 #Connection settings and the dataset
-mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+mydb2 = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+
+#Loop on the rows
+for (j in 1:nrow(myfuture2)){
+  
+  #Create the query
+  query <- "INSERT INTO cboemetric VALUES ('VIX','AAA',BBB)"
+  query <- gsub("AAA", myfuture2[j,1], query)
+  query <- gsub("BBB", as.character(myfuture2[j,2]), query)
+  
+  #Execute the query
+  dbSendQuery(mydb2, query)   
+}
+
+#Close the database
+dbDisconnect((mydb2))
+
+#Let's sleep 5 seconds 
+Sys.sleep(5)
+
+#Connection settings and the dataset
+mydb3 = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
 
 #Get the data from database, snapshotdate, skew, vix, left join on vix. 
-rs = dbSendQuery(mydb, "SELECT S.SNAPSHOTDATE, S.VALUE AS SKEW, V.VALUE AS VIX FROM (SELECT * FROM cboemetric where metric = 'SKEW') S LEFT JOIN (SELECT * FROM cboemetric where metric = 'VIX') V ON S.SNAPSHOTDATE = V.SNAPSHOTDATE ORDER BY S.SNAPSHOTDATE DESC")
+rs = dbSendQuery(mydb3, "SELECT S.SNAPSHOTDATE, S.VALUE AS SKEW, V.VALUE AS VIX FROM (SELECT * FROM cboemetric where metric = 'SKEW') S LEFT JOIN (SELECT * FROM cboemetric where metric = 'VIX') V ON S.SNAPSHOTDATE = V.SNAPSHOTDATE ORDER BY S.SNAPSHOTDATE DESC")
 myfuture = fetch(rs, n=-1)
 
 #Calculate the SKEW/VIX ratio
@@ -90,17 +102,20 @@ resultstable <- rbind(
 )
 
 #Close the database
-dbDisconnect((mydb))
+dbDisconnect((mydb3))
+
+#Let's sleep 5 seconds 
+Sys.sleep(5)
 
 #Connection settings and the dataset
-mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+mydb4 = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
 
 #Get the market volume data
-rs = dbSendQuery(mydb, "CALL GetMarketVolume('SPY')")
+rs = dbSendQuery(mydb4, "CALL GetMarketVolume('SPY')")
 stockdata = fetch(rs, n=-1)
 
 #Close the database
-dbDisconnect((mydb))
+dbDisconnect((mydb4))
 
 #Show the last record
 resultstable <- rbind(
@@ -115,14 +130,14 @@ resultstable <- rbind(
 )
 
 #Connection settings and the dataset
-mydb = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
+mydb5 = dbConnect(MySQL(), user='borsacanavari', password='opsiyoncanavari1', dbname='myoptions', host=myhost)
 
 #Get the market volume data
-rs = dbSendQuery(mydb, "CALL GetMarketVolume('QQQ')")
+rs = dbSendQuery(mydb5, "CALL GetMarketVolume('QQQ')")
 stockdata = fetch(rs, n=-1)
 
 #Close the database
-dbDisconnect((mydb))
+dbDisconnect((mydb5))
 
 #Show the last record
 resultstable <- rbind(
