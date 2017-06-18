@@ -61,7 +61,7 @@ for(i in 1:nrow(stocktickervector))
   #my <- c(my,as.character(as.Date(myfuture[1,2]))) #Snapshotdate
   
   #Get the monthly notification figures
-  query <- "SELECT BUY AS BUY1, BUY05 AS BUY2, SELL AS SELL1, SELL05 AS SELL2 FROM futurespredict WHERE future = 'CCC' AND PERIOD = 30 AND SNAPSHOTDATE = 'DDD'"
+  query <- "SELECT BUY05 AS BUY1, BUY1 AS BUY2, SELL05 AS SELL1, SELL1 AS SELL2 FROM futurespredict WHERE future = 'CCC' AND PERIOD = 30 AND SNAPSHOTDATE = (SELECT MAX(SNAPSHOTDATE) FROM futurespredict WHERE future = 'CCC' AND SNAPSHOTDATE >= 'DDD')"
   query <- gsub("CCC", stockticker, query)
   query <- gsub("DDD", as.Date(myfuture[1,2]), query)
   rs2 = dbSendQuery(mydb, query)
